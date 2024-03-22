@@ -1,0 +1,48 @@
+# using poetry pyproject format : https://python-poetry.org/docs/pyproject/
+# poetry new .
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = true
+name = "RFS"
+version = "0.0.10"
+description = "Robotic Framework System"
+license = "MIT"
+authors = [
+  "Yanothai Chaitawat <yanothaic15@gmail.com>",
+]
+maintainers = [
+  "Yanothai Chaitawat <yanothaic15@gmail.com>",
+]
+readme = "README.md"
+homepage = "https://github.com/pypa/sampleproject"
+repository = "https://github.com/pypa/sampleproject/issues"
+documentation = "https://github.com/pypa/sampleproject"
+keywords = ["packaging","poetry"]
+classifiers = [
+  #https://pypi.org/classifiers/
+  "Programming Language :: Python :: 3",
+  "Framework :: Robot Framework",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+packages = [
+  { include = "RFS" },
+  { include = "RFS/**/*.py" },
+  { include = "RFS/**/LICENSE" },
+  { include = "RFS/**/.gitignore" },
+  { include = "RFS/**/*.txt" },
+  # { include = "RFS/**/*.yaml" },
+]
+include = ["RFS/**/*"]
+exclude = ["__pycache__", ".pytest_cache", ".git"]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.scripts]
+rfs = "RFS.cli_tools:main"
