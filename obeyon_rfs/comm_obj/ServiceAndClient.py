@@ -8,7 +8,7 @@ from pydantic import BaseModel
 
 from obeyon_rfs.comm_type.srvs import ServiceRequestType, ServiceType
 
-from obeyon_rfs.RFS_SocketType import RFS_Socket_Request_RegisterServiceClient, RFS_Socket_Request_RegisterServiceServer, RFS_Socket_Request_ServiceRequest, RFS_Socket_Request_ServiceResponse, RFS_Socket_RequestContent_Register, RFS_Socket_RequestFrom, RFS_Socket_RequestType
+from obeyon_rfs.SocketType import RFS_Socket_Request_RegisterServiceClient, RFS_Socket_Request_RegisterServiceServer, RFS_Socket_Request_ServiceRequest, RFS_Socket_Request_ServiceResponse, RFS_Socket_RequestContent_Register, RFS_Socket_RequestFrom, RFS_Socket_RequestType
 from obeyon_rfs.comm_type.msgs import MessageType
 from obeyon_rfs.comm_obj.CommObj import CommObj
 

@@ -19,7 +19,7 @@ maintainers = [
 ]
 readme = "README.md"
 homepage = "https://github.com/pypa/sampleproject"
-repository = "https://github.com/pypa/sampleproject/issues"
+repository = "https://github.com/ObeyonRFS/ObeyonRFS"
 documentation = "https://github.com/pypa/sampleproject"
 keywords = ["packaging","poetry"]
 classifiers = [
@@ -30,14 +30,16 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 packages = [
-  { include = "ObeyonRFS" },
-  { include = "ObeyonRFS/**/*.py" },
-  { include = "ObeyonRFS/**/LICENSE" },
-  { include = "ObeyonRFS/**/.gitignore" },
-  { include = "ObeyonRFS/**/*.txt" },
-  # { include = "RFS/**/*.yaml" },
+  { include = "obeyon_rfs" },
 ]
-include = ["ObeyonRFS/**/*"]
+include = [
+  "obeyon_rfs/**/*",
+  "obeyon_rfs/**/*.py",
+  "obeyon_rfs/**/LICENSE",
+  "obeyon_rfs/**/.gitignore",
+  "obeyon_rfs/**/*.txt",
+  "obeyon_rfs/**/*.yaml",
+]
 exclude = ["__pycache__", ".pytest_cache", ".git"]
 
 
@@ -45,4 +47,4 @@ exclude = ["__pycache__", ".pytest_cache", ".git"]
 python = "^3.9"
 
 [tool.poetry.scripts]
-rfs = "RFS.cli_tools:main"
+orfs = "obeyon_rfs.cli_tools:main"

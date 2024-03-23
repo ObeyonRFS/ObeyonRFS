@@ -1,5 +1,5 @@
 from typing import Callable, Tuple
-from obeyon_rfs.RFS_Socket import *
+from obeyon_rfs.Socket import *
 import threading
 
 

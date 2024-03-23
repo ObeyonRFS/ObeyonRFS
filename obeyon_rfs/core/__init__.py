@@ -2,8 +2,8 @@
 import time
 from typing import List
 import obeyon_rfs
-from obeyon_rfs.RFS_Socket import RFS_CoreServerSocket, RFS_CoreToCommObjClientSocket
-from obeyon_rfs.RFS_SocketType import *
+from obeyon_rfs.Socket import RFS_CoreServerSocket, RFS_CoreToCommObjClientSocket
+from obeyon_rfs.SocketType import *
 from pydantic import ValidationError,BaseModel
 import threading
 

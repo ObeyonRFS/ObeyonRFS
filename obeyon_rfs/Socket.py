@@ -1,16 +1,17 @@
 import socket
+import threading
 from typing import Any, Dict
 import json
 
 
 
 import obeyon_rfs
-from obeyon_rfs.RFS_SocketType import *
+from obeyon_rfs.SocketType import *
 
 
 
 
-class RFS_ClientSocket:
+class ClientSocket:
     def __init__(self, dest_host:str, dest_port:int):
         self.server_host = dest_host
         self.server_port = dest_port
@@ -52,7 +53,7 @@ class RFS_ClientSocket:
     # def close(self):
     #     self.socket.close()
 
-class RFS_CommObjToCoreClientSocket(RFS_ClientSocket):
+class CommObjToCoreClientSocket(ClientSocket):
     def __init__(self):
         super().__init__(obeyon_rfs.get_core_host(), obeyon_rfs.get_core_port())
 
@@ -69,7 +70,7 @@ class RFS_CommObjToCoreClientSocket(RFS_ClientSocket):
                 raise e
         self.socket.settimeout(0.00001)
 
-class RFS_CoreToCommObjClientSocket(RFS_ClientSocket):
+class CoreToCommObjClientSocket(ClientSocket):
     def __init__(self, comm_obj_host:str, comm_obj_port:int):
         super().__init__(comm_obj_host, comm_obj_port)
 
@@ -84,7 +85,7 @@ class RFS_CoreToCommObjClientSocket(RFS_ClientSocket):
                 raise e
         self.socket.settimeout(0.00001)
 
-class RFS_ServerSocket:
+class ServerSocket:
     def __init__(self, server_host:str, server_port:int):
         self.host = server_host
         self.port = server_port
@@ -99,13 +100,18 @@ class RFS_ServerSocket:
         self.socket.settimeout(0.00001)
 
         self.stocked_msg:str = ""
+        self.recv_loop_task=threading.Thread(target=self.recv_loop,daemon=True)
+        self.recv_loop_task.start()
+    def recv_loop(self):
+        while True:
+            self.recv()
     def recv(self):
         try:
             self.conn, self.addr = self.socket.accept()
         except socket.timeout:
             return None
         try:
-            recv_msg = self.conn.recv(1024).decode()+"\n"
+            recv_msg = self.conn.recv(4096).decode()+"\n"
             # Protocol : The received message is json
             self.stocked_msg += recv_msg
         except socket.timeout as e:
@@ -117,8 +123,7 @@ class RFS_ServerSocket:
             else:
                 raise e
     
-    def analyze_stocked_msg(self) -> Dict[str, Any]:
-        self.recv()
+    def recv_json(self) -> Dict[str, Any]:
         #analyze the stocked message
         if self.stocked_msg:
             try:
@@ -135,14 +140,18 @@ class RFS_ServerSocket:
                 return None
 
 
-class RFS_CoreServerSocket(RFS_ServerSocket):
-    def __init__(self):
-        super().__init__(obeyon_rfs.get_core_host(), obeyon_rfs.get_core_port())
+class CoreServerSocket(ServerSocket):
+    def __init__(self,core_host:str=None,core_port:int=None):
+        # obeyon_rfs.get_core_host(), obeyon_rfs.get_core_port()
+        super().__init__(
+            server_host=core_host,
+            server_port=core_port
+        )
 
 
 
 
-class RFS_CommObjServerSocket(RFS_ServerSocket):
+class CommObjServerSocket(ServerSocket):
     def __init__(self, server_host:str, server_port:int):
         super().__init__(
             server_host=server_host,
