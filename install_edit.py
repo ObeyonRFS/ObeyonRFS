@@ -4,8 +4,8 @@ os.system("pip install -r requirements.txt")
 print("="*20)
 
 try:
-    import RFS
-    os.system("pip uninstall RFS -y")
+    import obeyon_rfs
+    os.system("pip uninstall obeyon_rfs -y")
     print("="*20)
 except ImportError:
     pass

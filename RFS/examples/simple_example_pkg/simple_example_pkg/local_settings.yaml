@@ -1,8 +1,0 @@
-log:
-  - "info"
-  - "error"
-  - "warning"
-  - "recommend"
-  - "ok"
-  - "time"
-  - "node_name"

@@ -7,9 +7,9 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 package-mode = true
-name = "RFS"
-version = "0.0.10"
-description = "Robotic Framework System"
+name = "ObeyonRFS"
+version = "0.0.11"
+description = "Robotic Framework System named ObeyonRFS"
 license = "MIT"
 authors = [
   "Yanothai Chaitawat <yanothaic15@gmail.com>",
@@ -30,14 +30,14 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 packages = [
-  { include = "RFS" },
-  { include = "RFS/**/*.py" },
-  { include = "RFS/**/LICENSE" },
-  { include = "RFS/**/.gitignore" },
-  { include = "RFS/**/*.txt" },
+  { include = "ObeyonRFS" },
+  { include = "ObeyonRFS/**/*.py" },
+  { include = "ObeyonRFS/**/LICENSE" },
+  { include = "ObeyonRFS/**/.gitignore" },
+  { include = "ObeyonRFS/**/*.txt" },
   # { include = "RFS/**/*.yaml" },
 ]
-include = ["RFS/**/*"]
+include = ["ObeyonRFS/**/*"]
 exclude = ["__pycache__", ".pytest_cache", ".git"]
 
 

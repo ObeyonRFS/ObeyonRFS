@@ -1,0 +1,44 @@
+# using poetry pyproject format : https://python-poetry.org/docs/pyproject/
+# poetry new .
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = true
+name = "simple_example_pkg"
+version = "0.1.0"
+description = "Robotic Framework System package"
+license = "MIT"
+authors = [
+  "Your name <your.email@example.com>",
+]
+maintainers = [
+  "Your name <your.email@example.com>",
+]
+readme = "README.md"
+homepage = "https://github.com/pypa/sampleproject"
+repository = "https://github.com/pypa/sampleproject/issues"
+documentation = "https://github.com/pypa/sampleproject"
+keywords = ["packaging","poetry"]
+classifiers = [
+  #https://pypi.org/classifiers/
+  "Programming Language :: Python :: 3",
+  "Framework :: Robot Framework",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+packages = [
+  { include = "simple_example_pkg" },
+]
+include = ["simple_example_pkg/**/*","simple_example_pkg/*"]
+exclude = ["__pycache__", ".pytest_cache", ".git"]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+RFS = "^0.0.10"
+
+[tool.poetry.scripts]
+simple_example_pkg = "simple_example_pkg:main"

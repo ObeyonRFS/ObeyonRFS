@@ -1,0 +1,23 @@
+RFS_CORE_HOST : "127.0.0.1"
+RFS_CORE_PORT : 50000
+
+
+log:
+  - "info"
+  - "error"
+  - "warning"
+  - "recommend"
+  - "timeout"
+  - "ok"
+  - "time"
+  - "node_name"
+
+
+log_color:
+  info: "white"
+  error: "red"
+  warning: "yellow"
+  recommend: "orange"
+  timeout: "red"
+  ok: "green"
+

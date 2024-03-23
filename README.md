@@ -1,24 +1,21 @@
-# Robotic Framework System
+# ObeyonRFS
 
-RFS (Robotic Framework System) is a python package that mimic ROS(Robotic Operating System) in term of communication ex. TCP, DDS but also supports for
+[developer Todo list](https://docs.google.com/document/d/1j6fuaYsBLOWE2tTJCBUQifE4MAYX0mjktdoHNTuosc4/edit)
 
-This python package aim to be ROS-like that mainly focus on working on Windows.
 
-However working across OS is likely easy right now. As python are riches in modules to make many tasks possible.
+ObeyonRFS is an customized robotic framework that works kinda like ROS.
 
-ROS2 utilize FastDDS and QT
+This framework aims to work across OS and microcontroller device for robot's communication by utilizing wxPython, TCP socket, VTK, etc.,
 
-This package will utilize socket, wxPython similarly in ROS1
 
-However this package might utilize FastDDS in the future.
-
-Quick command for dev/test
+# Installation from source
 
 ```
-poetry build
-pip install .\dist\rfs-0.0.10-py3-none-any.whl --force-reinstall --no-deps
+git clone https://github.com/ObeyonRFS/ObeyonRFS
+cd ObeyonRFS
+python install_source.py
 ```
 
-since `pip install -e .` doesn't properly work with poetry
+The script `install_edit.py` is for installing this repo in edit mode. You can use it too.
 
 https://readthedocs.org/ might be the best here

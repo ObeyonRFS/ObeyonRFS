@@ -6,8 +6,8 @@ os.system("poetry build")
 print("="*20)
 
 try:
-    import RFS
-    os.system("pip uninstall RFS -y")
+    import obeyon_rfs
+    os.system("pip uninstall obeyon_rfs -y")
     print("="*20)
 except ImportError:
     pass
