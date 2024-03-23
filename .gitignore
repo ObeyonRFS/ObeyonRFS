@@ -163,3 +163,5 @@ cython_debug/
 dist/
 dist/*
 obeyon_rfs.egg-info/
+
+poetry.lock
