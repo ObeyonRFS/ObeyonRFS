@@ -157,6 +157,11 @@
       "github:ObeyonRFS/ObeyonRFS/obeyon_rfs/settings/global_settings.yaml"
     ]
   ],
-  "deps": [],
+  "deps": [
+    [
+      "senml",
+      "0.1.0"
+    ]
+  ],
   "version": "0.0.11"
 }
