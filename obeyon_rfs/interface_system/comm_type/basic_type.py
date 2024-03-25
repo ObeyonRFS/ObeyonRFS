@@ -1,0 +1,2 @@
+class BaseType(BaseModel):
+    pass

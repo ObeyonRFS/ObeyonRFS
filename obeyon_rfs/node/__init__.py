@@ -1,4 +1,7 @@
 from typing import Callable, Tuple
+
+from obeyon_rfs.future import *
+
 from obeyon_rfs.Socket import *
 import threading
 
@@ -32,6 +35,9 @@ class Node:
         return ActionClient(self, action, act_type)
     def create_action_subscriber(self, action: str, act_type: ActionType, callback: Callable) -> ActionSubscriber:
         return ActionSubscriber(self, action, act_type, callback)
+    
+    def log_info(self,msg):
+        print(msg)
 
 
 

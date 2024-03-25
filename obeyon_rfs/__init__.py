@@ -3,11 +3,17 @@ import time
 from typing import Any, Dict
 
 from pydantic import BaseModel
-import obeyon_rfs.core
+
 import os
 import socket
 import psutil
 import requests
+
+
+from obeyon_rfs.node import *
+from obeyon_rfs.interface_system.event import *
+from obeyon_rfs.core import *
+from obeyon_rfs.interface_system.comm_type import *
 
 __version__ = '0.0.10'
 __module_dir__ = os.path.dirname(__file__)
@@ -15,25 +21,25 @@ __module_dir__ = os.path.dirname(__file__)
 
 
 class InitArgs(BaseModel):
-    ORFS_CORE_HOST:str=None
-    ORFS_CORE_PORT:int=None
+    node_name:str = None
+    ORFS_CORE_HOST:str = "127.0.0.1"
+    ORFS_CORE_PORT:int = 50000
+    log_forwarding_server_host:str = None
+    log_forwarding_server_port:int = None
 
-_init_args:InitArgs=None
 
-def init(args:Dict[str,Any]=None):
+_init_args:InitArgs=InitArgs()
+
+def init(args:InitArgs=None):
+    global _init_args
     if args is None:
         return
-    args.setdefault("RFS_CORE_HOST",None)
-    if args["RFS_CORE_HOST"] is not None:
-        os.environ["RFS_CORE_HOST"] = args["RFS_CORE_HOST"]
-    args.setdefault("RFS_CORE_PORT",None)
-    if args["RFS_CORE_PORT"] is not None:
-        os.environ["RFS_CORE_PORT"] = args["RFS_CORE_PORT"]
+    _init_args=InitArgs(**args.model_dump())
 
 
 def spin_once(period_time=0.001):
     if obeyon_rfs.is_core_running()==False:
-        raise ConnectionError("RFS core is not available")
+        raise ConnectionError("ObeyonRFS core is not available")
     time.sleep(period_time)
 def spin(period_time=0.001):
     while True:
@@ -78,25 +84,8 @@ def is_core_running():
     #     return False
     return is_port_in_use(obeyon_rfs.get_core_host(),obeyon_rfs.get_core_port())
     
-
-def generate_random_port(ip_address):
-    while True:
-        port = random.randint(1024, 65535)
-        if not is_port_in_use(ip_address, port):
-            return port
-
-def is_port_in_use(ip_address, port):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        try:
-            s.bind((ip_address, port))
-        except OSError:
-            return True  # Port is in use
-        else:
-            return False  # Port is available
         
 def sleep(t:float):
-    if obeyon_rfs.is_core_running()==False:
-        raise ConnectionError("RFS core is not available")
     time.sleep(t)
 
 def sleep_forever():
@@ -106,3 +95,12 @@ def sleep_forever():
 
 def generate_random_id():
     return random.randint(0, 1000000000)
+
+
+
+def pydantic_validation_check(model:BaseModel, data:Dict[str,Any]):
+    try:
+        model(**data)
+    except ValidationError as e:
+        return False
+    return True
