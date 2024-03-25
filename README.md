@@ -4,7 +4,7 @@
 
 ObeyonRFS is a customized robotic framework.
 
-This framework aims to work across OS and microcontroller device by utilizing wxPython, TCP socket, VTK, etc.,
+This framework aims to work across OS and microcontroller device by utilizing wxPython, TCP socket, VTK, strict Component-Based Architecture, MicroPython etc.,
 
 # Installation from source
 

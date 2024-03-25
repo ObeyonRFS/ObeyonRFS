@@ -1,5 +1,6 @@
 import os
 import glob
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 os.system("pip install -r requirements.txt")
 print("="*20)
 os.system("poetry build")
