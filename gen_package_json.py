@@ -7,7 +7,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 json_file = open("package.json", "r")
 package_json = json.load(json_file)
 json_file.close()
-package_json['url'] = []
+package_json['urls'] = []
 package_json['version'] = ""
 with open(os.path.join(os.getcwd(), 'pyproject.toml'), 'r') as f:
     pyproject = toml.load(f)
@@ -21,7 +21,7 @@ for root, dirs, files in os.walk("obeyon_rfs/"):
         continue
     for file in files:
         path=os.path.join(root, file).replace("\\", "/")
-        package_json['url'].append(
+        package_json['urls'].append(
             [path, "github:ObeyonRFS/ObeyonRFS/"+path]
         )
 
