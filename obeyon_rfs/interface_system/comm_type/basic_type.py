@@ -1,2 +1,0 @@
-class BaseType(BaseModel):
-    pass

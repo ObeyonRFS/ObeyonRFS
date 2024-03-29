@@ -167,3 +167,4 @@ obeyon_rfs.egg-info/
 poetry.lock
 
 .$*.bkp
+.$*.dtmp
