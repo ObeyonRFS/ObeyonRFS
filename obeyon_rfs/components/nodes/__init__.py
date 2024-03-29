@@ -52,7 +52,7 @@ class Node(ORFS_Component):
         if model is None:
             return
         
-        # print(model)
+        print(model)
         # if model.message_type!=ORFS_MessageType.CORE_PING:
         #     obeyon_rfs.log_info(model)
         match model.message_type:
