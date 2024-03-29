@@ -18,7 +18,7 @@ class CoreNode(Node):
         self._listener_nodes:Dict[str,Tuple[str,int]] = {}
         self.additional_handle_client_callbacks.append(self.__additional_handle_client)
     async def __additional_handle_client(self,model:ORFS_Message,reader:StreamReader,writer:StreamWriter):
-        # print("additional",model)
+        print("additional",model)
         match model.message_type:
             case ORFS_MessageType.CORE_PING:
                 # print("pong")
