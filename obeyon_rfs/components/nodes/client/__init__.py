@@ -40,6 +40,8 @@ class ClientNode(Node):
                 return
         sys.exit('CoreNode connection lost')
     async def register_to_core(self):
+        while self.receiver_port==0:
+            await asyncio.sleep(0)
         reader,writer = await asyncio.open_connection(self.core_host,self.core_port)
         writer.write(ORFS_Message(
             message_type=ORFS_MessageType.REGISTER_NODE,

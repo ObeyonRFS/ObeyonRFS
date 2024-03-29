@@ -101,9 +101,9 @@ class Node(ORFS_Component):
         tasks = []
         for timer in self.timers:
             tasks.append(asyncio.create_task(timer._start()))
+        tasks.append(asyncio.create_task(self._start_receiver_server()))
         for start_callback in self.additional_start_callbacks:
             tasks.append(asyncio.create_task(start_callback()))
-        tasks.append(asyncio.create_task(self._start_receiver_server()))
         await asyncio.gather(*tasks)
     def start(self) -> NoReturn:
         asyncio.run(self._start())
