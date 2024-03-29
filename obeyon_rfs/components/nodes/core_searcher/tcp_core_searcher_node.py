@@ -64,6 +64,7 @@ class TCPCoreSearcherNode(Node):
             if ip_address not in dns_servers:
                 tasks.append(ping_core_append(ip_address,self.search_on_port))
         tasks.append(ping_core_append('127.0.0.1',self.search_on_port))
+        tasks.append(ping_core_append('localhost',self.search_on_port))
         results = await asyncio.gather(*tasks)
         results = [r for r in results if r is not None]
         obeyon_rfs.log_info("Connectable :",*results)
