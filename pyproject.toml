@@ -46,6 +46,7 @@ exclude = ["__pycache__", ".pytest_cache", ".git"]
 [tool.poetry.dependencies]
 python = "^3.9"
 pyserial = "^3.5"
+pydantic = "^1.8.2"
 
 [tool.poetry.scripts]
 orfs = "obeyon_rfs.cli_tools:main"
