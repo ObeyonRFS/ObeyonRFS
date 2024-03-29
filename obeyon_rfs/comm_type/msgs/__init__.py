@@ -21,3 +21,4 @@ class OdometryMsg(MessageType):
 @dataclass
 class SimpleMsg(MessageType):
     message:str
+    utc_time:str

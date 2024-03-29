@@ -1,13 +1,11 @@
 
 from typing import TYPE_CHECKING
+import socket
 
-if TYPE_CHECKING:
-    import socket
-    
-    import asyncio
-    import sys
-    from obeyon_rfs.components import ORFS_Component, ORFS_MessageType,ORFS_Message
-    from obeyon_rfs.components.nodes import Node
+import asyncio
+import sys
+from obeyon_rfs.components import ORFS_Component, ORFS_MessageType,ORFS_Message
+from obeyon_rfs.components.nodes import Node
 
 class ClientNode(Node):
     def __init__(self,node_name:str,core_host:str,core_port:int):
@@ -17,7 +15,10 @@ class ClientNode(Node):
             receiver_port=0
         )
         self.core_ping_timer=self.create_timer(3.0,self.ping_to_core)
-    async def _ping_to_core(self):
+        self.core_host=core_host
+        self.core_port=core_port
+        self.additional_start_callbacks.append(self.__additional_start_callback)
+    async def ping_to_core(self):
         try:
             reader,writer = await asyncio.open_connection(self.core_host,self.core_port)
         except ConnectionRefusedError as e:
@@ -38,8 +39,6 @@ class ClientNode(Node):
             if model.message_type==ORFS_MessageType.CORE_PONG:
                 return
         sys.exit('CoreNode connection lost')
-    def ping_to_core(self):
-        asyncio.create_task(self._ping_to_core())
     async def register_to_core(self):
         reader,writer = await asyncio.open_connection(self.core_host,self.core_port)
         writer.write(ORFS_Message(
@@ -57,13 +56,15 @@ class ClientNode(Node):
         try:
             reader,writer = await asyncio.open_connection(self.core_host,self.core_port)
         except ConnectionRefusedError as e:
-            sys.exit('CoreNode is not running')
+            sys.exit('CoreNode connection lost')
         writer.write(model.base64_encode())
         await writer.drain()
         writer.close()
         await writer.wait_closed()
     def sent_model_to_core(self,model:ORFS_Message):
         asyncio.create_task(self._sent_model_to_core(model))
+    async def __additional_start_callback(self):
+        await self.register_to_core()
 
 
 

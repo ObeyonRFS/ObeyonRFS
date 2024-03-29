@@ -1,16 +1,16 @@
-from typing import TYPE_CHECKING, Type, Callable
+from typing import TYPE_CHECKING, Any, Coroutine, Type, Callable
 
 
+from obeyon_rfs.components import ORFS_Component, ORFS_MessageType, ORFS_Message
+from obeyon_rfs.comm_type.msgs import MessageType
 if TYPE_CHECKING:
-    from obeyon_rfs.components import ORFS_Component, ORFS_MessageType, ORFS_Message
-    from obeyon_rfs.comm_type.msgs import MessageType
-    from obeyon_rfs.components.nodes import Node
+    from obeyon_rfs.components.nodes import Node,ClientNode,CoreNode
 
 
 class Publisher(ORFS_Component):
     def __init__(self,topic:str,msg_type:Type[MessageType]):
         super().__init__()
-        self.parent:Node = None
+        self.parent:ClientNode|CoreNode = None
         self.topic=topic
         self.msg_type=msg_type
     def publish(self,msg:MessageType):
@@ -25,19 +25,19 @@ class Publisher(ORFS_Component):
             node_receiver_port=self.parent.receiver_port
         ))
 class Subscriber(ORFS_Component):
-    def __init__(self,topic:str,msg_type:Type[MessageType],callback:Callable[[MessageType],None]):
+    def __init__(self,topic:str,msg_type:Type[MessageType],coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None):
         super().__init__()
         self.parent:Node = None
         self.topic=topic
         self.msg_type=msg_type
-        self.callback=callback
+        self.coroutine_callback=coroutine_callback
     async def recv_model(self,model:ORFS_Message):
         if model.message_name!=self.topic:
             return
         if not isinstance(model.message_content,self.msg_type):
             raise TypeError('message type is not matched')
         else:
-            self.callback(model.message_content)
+            await self.coroutine_callback(model.message_content)
     def __repr__(self):
         return f'<Subscriber {self.topic} {self.msg_type} {self.callback}>'
     def __str__(self):

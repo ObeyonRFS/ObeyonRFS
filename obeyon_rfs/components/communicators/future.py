@@ -1,9 +1,16 @@
+import asyncio
+from dataclasses import dataclass
+from enum import Enum
+import time
 from typing import TYPE_CHECKING, Any, Callable, List
 
+from obeyon_rfs.components import ORFS_Component, ORFS_MessageType
+
+from obeyon_rfs.comm_type.actions import ActionType, ActionFeedbackType, ActionResultType
+from obeyon_rfs.comm_type.srvs import ServiceRequestType, ServiceResponseType, ServiceType
+
 if TYPE_CHECKING:
-    from obeyon_rfs.components import ORFS_Component, ORFS_MessageType
-    from obeyon_rfs.components.nodes import AppNode
-    from obeyon_rfs.components.communicators import ServiceResponseType, ServiceRequestType, ActionType, ActionFeedbackType, ActionResultType
+    from obeyon_rfs.components.nodes import Node
 
 class FutureType(str,Enum):
     SERVICE = 'SERVICE'
@@ -15,7 +22,7 @@ class Future(ORFS_Component):
         super().__init__()
         self.start_time:float = time.time()
         self.last_feedback_time:float = time.time()
-        self.parent:AppNode = None
+        self.parent:Node = None
         self.future_type:FutureType = None
         #The word complete can include error or success
         self.feedback_callbacks:List[Callable[[],None]] = []
@@ -56,7 +63,7 @@ class Future(ORFS_Component):
         if self.future_type==FutureType.ACTION:
             while True:
                 await asyncio.sleep(0)
-                if time.time()-self.last_feedback_time>self.feedback_timeout:
+                if time.time()-self.last_feedback_time>self.feedback_timeout or time.time()-self.start_time>self.result_timeout:
                     return None
                 if self.result is not None:
                     return

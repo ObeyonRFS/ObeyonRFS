@@ -1,17 +1,28 @@
+import asyncio
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Dict, Type
+from uuid import UUID
+from obeyon_rfs.components import (
+    ORFS_Component,
+    ORFS_MessageType,
+    ORFS_Message
+)
 from obeyon_rfs.comm_type.srvs import (
     ServiceType, ServiceRequestType, ServiceResponseType
 )
+from obeyon_rfs.components.communicators.future import FutureType, Future
+if TYPE_CHECKING:
+    from obeyon_rfs.components.nodes import Node
 
 
 class ServiceServer(ORFS_Component):
-    def __init__(self,srv_name:str,srv_type:Type[ServiceType],callback:Callable[[ServiceRequestType],ServiceResponseType]):
+    def __init__(self,srv_name:str,srv_type:Type[ServiceType],coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None):
         super().__init__()
-        self.parent:AppNode|CoreNode = None
+        self.parent:Node = None
         self.srv_name = srv_name
         self.srv_type = srv_type
         self.srv_request_type = ServiceType.get_request_type(srv_type)
         self.srv_response_type = ServiceType.get_response_type(srv_type)
-        self.callback = callback
+        self.coroutine_callback=coroutine_callback
     async def recv_model(self,model:ORFS_Message):
         if model.message_name!=self.srv_name:
             return
@@ -21,7 +32,7 @@ class ServiceServer(ORFS_Component):
             self.parent.sent_model_to_core(ORFS_Message(
                 message_type=ORFS_MessageType.SERVICE_RESPONSE,
                 message_name=self.srv_name,
-                message_content=self.callback(model.message_content),
+                message_content=await self.callback(model.message_content),
                 node_name=self.parent.node_name,
                 node_receiver_host=self.parent.receiver_host,
                 node_receiver_port=self.parent.receiver_port,
@@ -31,7 +42,7 @@ class ServiceServer(ORFS_Component):
 class ServiceClient(ORFS_Component):
     def __init__(self,srv_name:str,srv_type:Type[ServiceType]):
         super().__init__()
-        self.parent:AppNode = None
+        self.parent:Node = None
         self.srv_name = srv_name
         self.srv_type = srv_type
         self.srv_request_type = ServiceType.get_request_type(srv_type)
@@ -56,7 +67,7 @@ class ServiceClient(ORFS_Component):
         #work in progress
         new_future=self.send_request_async(req,None)
         return new_future.wait_for_response()
-    def send_request_async(self,req:ServiceRequestType,timeout=5.0,response_callback:Callable[[ServiceResponseType],None]|None=None) -> Future:
+    def send_request_async(self,req:ServiceRequestType,timeout=5.0) -> Future:
         if not isinstance(req,self.srv_request_type):
             raise TypeError('message type is not matched')
         

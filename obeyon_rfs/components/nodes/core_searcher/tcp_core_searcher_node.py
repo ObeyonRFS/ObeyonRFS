@@ -2,18 +2,21 @@
 from typing import TYPE_CHECKING, List, Tuple
 
 from obeyon_rfs.components import ORFS_Message, ORFS_MessageType
-if TYPE_CHECKING:
-    import dns
-    import socket
-    import aioping
-    import asyncio
-    import sys
-    import obeyon_rfs
-    from obeyon_rfs.components.nodes import Node
+import dns.resolver
+import socket
+import aioping
+import asyncio
+import sys
+import obeyon_rfs
+from obeyon_rfs.components.nodes import Node
 
 class TCPCoreSearcherNode(Node):
     def __init__(self,search_timeout=2.0,search_on_port=7134,subnet_mask="255.255.255.0"):
-        super().__init__("temp_node")
+        super().__init__(
+            node_name="temp_node",
+            receiver_host=socket.gethostbyname(socket.gethostname()),
+            receiver_port=0
+        )
         self.search_timeout=search_timeout
         self.search_on_port=search_on_port
         self.subnet_mask=subnet_mask

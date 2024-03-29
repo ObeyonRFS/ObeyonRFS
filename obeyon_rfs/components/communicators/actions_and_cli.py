@@ -1,17 +1,21 @@
-from typing import TYPE_CHECKING, Callable, Type
+import asyncio
+import time
+from typing import TYPE_CHECKING, Any, Callable, Coroutine, Dict, Type
+from uuid import UUID
 
+from obeyon_rfs.comm_type.actions import (
+    ActionRequestType,
+    ActionFeedbackType,
+    ActionResultType,
+    ActionType
+)
+from obeyon_rfs.components import (
+    ORFS_Component,
+    ORFS_MessageType,
+    ORFS_Message
+)
+from obeyon_rfs.components.communicators.future import FutureType, Future
 if TYPE_CHECKING:
-    from obeyon_rfs.comm_type.actions import (
-        ActionRequestType,
-        ActionFeedbackType,
-        ActionResultType,
-        ActionType
-    )
-    from obeyon_rfs.components import (
-        ORFS_Component,
-        ORFS_MessageType,
-        ORFS_Message
-    )
     from obeyon_rfs.components.nodes import Node
 
 class ActionInfoSender(ORFS_Component):
@@ -73,7 +77,7 @@ class ActionClient(ORFS_Component):
         self.action_request_type=ActionType.get_request_type(action_type)
         self.action_feedback_type=ActionType.get_feedback_type(action_type)
         self.action_result_type=ActionType.get_result_type(action_type)
-        self._futures:Dict[UUID,Future] = {}
+        self._futures:Dict[UUID,asyncio.Future] = {}
     async def recv_model(self,model:ORFS_Message):
         if model.message_name!=self.action_name:
             return

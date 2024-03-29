@@ -1,10 +1,9 @@
 from typing import TYPE_CHECKING
 
 
-if TYPE_CHECKING:
-    from obeyon_rfs.components import ORFS_Component, ORFS_MessageType
-    from obeyon_rfs.components.nodes import Node
+from obeyon_rfs.components import ORFS_Component, ORFS_MessageType
+from obeyon_rfs.components.nodes.client import ClientNode
 
-class HttpNode(Node):
+class HttpNode(ClientNode):
     def __init__(self):
         super().__init__()

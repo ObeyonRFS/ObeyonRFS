@@ -1,19 +1,22 @@
+import asyncio
+from typing import TYPE_CHECKING, Any, Callable, Coroutine
+from obeyon_rfs.components import ORFS_Component, ORFS_MessageType, ORFS_Message
+if TYPE_CHECKING:
+    from obeyon_rfs.components.nodes import Node
+
+
 class Timer(ORFS_Component):
-    def __init__(self,timer_interval:float,callback:Callable[[],None]=None,coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None):
+    def __init__(self,timer_interval:float,coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None):
         super().__init__()
-        self.parent:AppNode|CoreNode|SerialDriverNode = None
+        self.parent:Node = None
         self.timer_interval=timer_interval
-        self.callback=callback
         self.coroutine_callback=coroutine_callback
     
     async def _start(self):
         while True:
             await asyncio.sleep(self.timer_interval)
             if self.coroutine_callback is not None:
-                # await self.coroutine_callback()
-                asyncio.create_task(self.coroutine_callback())
-            if self.callback is not None:
-                self.callback()
+                await self.coroutine_callback()
             # if self.callback is Coroutines:
             #     await self.callback()
             # elif self.callback is not None:

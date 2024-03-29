@@ -3,5 +3,5 @@ def spin():
         pass
 
 
-def log_info(msg: str):
-    print(msg)
+def log_info(*values):
+    print(*values)
