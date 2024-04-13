@@ -1,5 +1,5 @@
 build
-twine
+# twine
 poetry
-mpremote
+# mpremote
 toml
