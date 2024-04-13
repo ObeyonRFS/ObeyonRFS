@@ -79,6 +79,14 @@ class LocalNetworkCoreNode(Node):
             #     obeyon_rfs.log_info("register",model.node_name,model.node_receiver_host,model.node_receiver_port)
             #     self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
 
+        print("Check bool",model.message_type in [
+            ORFS_MessageType.PUBLISH,
+            ORFS_MessageType.SERVICE_REQUEST,
+            ORFS_MessageType.SERVICE_RESPONSE,
+            ORFS_MessageType.ACTION_REQUEST,
+            ORFS_MessageType.ACTION_FEEDBACK,
+            ORFS_MessageType.ACTION_RESULT
+        ])
         #forward to registerd nodes
         if model.message_type in [
             ORFS_MessageType.PUBLISH,
