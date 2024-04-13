@@ -58,9 +58,9 @@ class ClientNode(Node):
     #     await writer.drain()
     #     writer.close()
     #     await writer.wait_closed()
-    async def _sent_model_to_core(self,model:ORFS_Message):
+    async def sent_model_to_core(self,model:ORFS_Message):
         try:
-            reader,writer = await asyncio.open_connection(self.core_host,self.core_port)
+            reader,writer = await asyncio.wait_for(asyncio.open_connection(self.core_host,self.core_port),timeout=0.5)
         except ConnectionRefusedError as e:
             sys.exit('CoreNode connection lost')
         except TimeoutError as e:
@@ -69,8 +69,6 @@ class ClientNode(Node):
         await writer.drain()
         writer.close()
         await writer.wait_closed()
-    def sent_model_to_core(self,model:ORFS_Message):
-        asyncio.create_task(self._sent_model_to_core(model))
     async def __additional_start_callback(self):
         # await self.register_to_core()
         pass
