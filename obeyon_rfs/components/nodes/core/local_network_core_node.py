@@ -94,29 +94,20 @@ class LocalNetworkCoreNode(Node):
                     dest_reader,dest_writer = await asyncio.open_connection(dest_host,dest_port)
                 except ConnectionRefusedError as e:
                     #remove node
-                    try:
-                        del self._listener_nodes[node_name]
-                        obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
-                    except KeyError as e:
-                        pass
+                    self._listener_nodes.pop(node_name,None)
+                    obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
                     continue
                     
                 except TimeoutError as e:
                     #remove node
-                    try:
-                        del self._listener_nodes[node_name]
-                        obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
-                    except KeyError as e:
-                        pass
+                    self._listener_nodes.pop(node_name,None)
+                    obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
                     continue
                 except OSError as e:
                     if e.errno==10049:
                         #remove node
-                        try:
-                            del self._listener_nodes[node_name]
-                            obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
-                        except KeyError as e:
-                            pass
+                        self._listener_nodes.pop(node_name,None)
+                        obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
                         continue
                 dest_writer.write(model.base64_encode())
                 await dest_writer.drain()
