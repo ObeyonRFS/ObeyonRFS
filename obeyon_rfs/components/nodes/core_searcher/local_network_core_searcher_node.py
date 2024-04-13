@@ -14,7 +14,7 @@ class LocalNetworkCoreSearcherNode(Node):
     def __init__(self,search_timeout=4.0,search_on_port=7134,subnet_mask="255.255.255.0"):
         super().__init__(
             node_name="temp_node",
-            receiver_host=socket.gethostbyname(socket.gethostname()),
+            receiver_host=obeyon_rfs.get_local_ip_address(),
             receiver_port=0
         )
         self.search_timeout=search_timeout
