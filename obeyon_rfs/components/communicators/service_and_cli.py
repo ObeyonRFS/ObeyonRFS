@@ -26,18 +26,17 @@ class ServiceServer(ORFS_Component):
     async def recv_model(self,model:ORFS_Message):
         if model.message_name!=self.srv_name:
             return
-        if not isinstance(model.message_content,self.srv_request_type):
-            raise TypeError('message type is not matched')
-        else:
-            await self.parent.sent_model_to_core(ORFS_Message(
-                message_type=ORFS_MessageType.SERVICE_RESPONSE,
-                message_name=self.srv_name,
-                message_content=await self.callback(model.message_content),
-                node_name=self.parent.node_name,
-                node_receiver_host=self.parent.receiver_host,
-                node_receiver_port=self.parent.receiver_port,
-                message_uuid=model.message_uuid
-            ))
+        srv_request=self.srv_request_type.validate(model.message_content)
+        srv_response=await self.coroutine_callback(srv_request)
+        await self.parent.sent_model_to_core(ORFS_Message(
+            message_type=ORFS_MessageType.SERVICE_RESPONSE,
+            message_name=self.srv_name,
+            message_content=srv_response,
+            node_name=self.parent.node_name,
+            node_receiver_host=self.parent.receiver_host,
+            node_receiver_port=self.parent.receiver_port,
+            message_uuid=model.message_uuid
+        ))
 
 class ServiceClient(ORFS_Component):
     def __init__(self,srv_name:str,srv_type:Type[ServiceType]):
