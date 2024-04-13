@@ -59,6 +59,7 @@ class ClientNode(Node):
     #     writer.close()
     #     await writer.wait_closed()
     async def sent_model_to_core(self,model:ORFS_Message):
+        model.domain_name=self.domain_name
         try:
             reader,writer = await asyncio.wait_for(asyncio.open_connection(self.core_host,self.core_port),timeout=0.5)
         except ConnectionRefusedError as e:

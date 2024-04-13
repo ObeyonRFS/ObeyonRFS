@@ -11,13 +11,13 @@ from obeyon_rfs.comm_type.srvs import (
 )
 from obeyon_rfs.components.communicators.future import FutureType, Future
 if TYPE_CHECKING:
-    from obeyon_rfs.components.nodes import Node
+    from obeyon_rfs.components import ClientNode, LocalNetworkCoreNode
 
 
 class ServiceServer(ORFS_Component):
     def __init__(self,srv_name:str,srv_type:Type[ServiceType],coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None):
         super().__init__()
-        self.parent:Node = None
+        self.parent:ClientNode = None
         self.srv_name = srv_name
         self.srv_type = srv_type
         self.srv_request_type = ServiceType.get_request_type(srv_type)
@@ -29,7 +29,7 @@ class ServiceServer(ORFS_Component):
         if not isinstance(model.message_content,self.srv_request_type):
             raise TypeError('message type is not matched')
         else:
-            self.parent.sent_model_to_core(ORFS_Message(
+            await self.parent.sent_model_to_core(ORFS_Message(
                 message_type=ORFS_MessageType.SERVICE_RESPONSE,
                 message_name=self.srv_name,
                 message_content=await self.callback(model.message_content),
@@ -42,7 +42,7 @@ class ServiceServer(ORFS_Component):
 class ServiceClient(ORFS_Component):
     def __init__(self,srv_name:str,srv_type:Type[ServiceType]):
         super().__init__()
-        self.parent:Node = None
+        self.parent:ClientNode = None
         self.srv_name = srv_name
         self.srv_type = srv_type
         self.srv_request_type = ServiceType.get_request_type(srv_type)
@@ -67,7 +67,7 @@ class ServiceClient(ORFS_Component):
         #work in progress
         new_future=self.send_request_async(req,None)
         return new_future.wait_for_response()
-    def send_request_async(self,req:ServiceRequestType,timeout=5.0) -> Future:
+    def send_request(self,req:ServiceRequestType,timeout=5.0) -> Future:
         if not isinstance(req,self.srv_request_type):
             raise TypeError('message type is not matched')
         
@@ -79,12 +79,12 @@ class ServiceClient(ORFS_Component):
             node_receiver_host=self.parent.receiver_host,
             node_receiver_port=self.parent.receiver_port
         )
-        self.parent.sent_model_to_core(model)
         new_future=Future()
         new_future.parent=self
         new_future.future_type=FutureType.SERVICE
         new_future.response_timeout=timeout
         self._futures[model.message_uuid]=new_future
+        self.parent.sent_model_to_core(model)
 
         # asyncio.create_task(self.clear_timeout_futures(new_future))
         

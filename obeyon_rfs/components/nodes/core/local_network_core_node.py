@@ -126,7 +126,8 @@ class LocalNetworkCoreNode(Node):
                 obeyon_rfs.log_info("forwarded to",node_name,dest_host,dest_port)
                 dest_writer.close()
                 await dest_writer.wait_closed()
-    async def _sent_model_to_core(self,model:ORFS_Message):
+    async def sent_model_to_core(self,model:ORFS_Message):
+        model.domain_name=self.domain_name
         try:
             reader,writer = await asyncio.open_connection(self.receiver_host,self.receiver_port)
         except ConnectionRefusedError as e:
@@ -135,5 +136,3 @@ class LocalNetworkCoreNode(Node):
         await writer.drain()
         writer.close()
         await writer.wait_closed()
-    def sent_model_to_core(self,model:ORFS_Message):
-        asyncio.create_task(self._sent_model_to_core(model))
