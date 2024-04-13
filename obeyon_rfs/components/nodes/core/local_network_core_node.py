@@ -110,5 +110,6 @@ class LocalNetworkCoreNode(Node):
                         continue
                 dest_writer.write(model.base64_encode())
                 await dest_writer.drain()
+                print("forwarded to",node_name,dest_host,dest_port)
                 dest_writer.close()
                 await dest_writer.wait_closed()
