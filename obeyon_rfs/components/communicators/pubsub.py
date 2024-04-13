@@ -4,19 +4,19 @@ from typing import TYPE_CHECKING, Any, Coroutine, Type, Callable
 from obeyon_rfs.components import ORFS_Component, ORFS_MessageType, ORFS_Message
 from obeyon_rfs.comm_type.msgs import MessageType
 if TYPE_CHECKING:
-    from obeyon_rfs.components.nodes import Node
+    from obeyon_rfs.components.nodes import Node, ClientNode
 
 
 class Publisher(ORFS_Component):
     def __init__(self,topic:str,msg_type:Type[MessageType]):
         super().__init__()
-        self.parent:Node = None
+        self.parent:ClientNode = None
         self.topic=topic
         self.msg_type=msg_type
-    def publish(self,msg:MessageType):
+    async def publish(self,msg:MessageType):
         if not isinstance(msg,self.msg_type):
             raise TypeError('message type is not matched')
-        self.parent.sent_model_to_core(ORFS_Message(
+        await self.parent.sent_model_to_core(ORFS_Message(
             message_type=ORFS_MessageType.PUBLISH,
             message_name=self.topic,
             message_content=msg,

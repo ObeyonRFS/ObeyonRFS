@@ -1,3 +1,4 @@
+import sys
 from typing import TYPE_CHECKING, Dict, NoReturn, Tuple
 from obeyon_rfs.components.nodes import Node
 
@@ -114,3 +115,14 @@ class LocalNetworkCoreNode(Node):
                 print("forwarded to",node_name,dest_host,dest_port)
                 dest_writer.close()
                 await dest_writer.wait_closed()
+    async def _sent_model_to_core(self,model:ORFS_Message):
+        try:
+            reader,writer = await asyncio.open_connection(self.receiver_host,self.receiver_port)
+        except ConnectionRefusedError as e:
+            sys.exit('CoreNode connection lost')
+        writer.write(model.base64_encode())
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+    def sent_model_to_core(self,model:ORFS_Message):
+        asyncio.create_task(self._sent_model_to_core(model))
