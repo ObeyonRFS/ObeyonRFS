@@ -21,9 +21,19 @@ class LocalNetworkCoreNode(Node):
         self.additional_handle_client_callbacks.append(self.__additional_handle_client)
     async def __additional_handle_client(self,model:ORFS_Message,reader:StreamReader,writer:StreamWriter):
         # print("additional",model)
+        # register with model message instead (include every types)
+        if model.node_name not in self._listener_nodes:
+            self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
+            obeyon_rfs.log_info("registered",model.node_name,model.node_receiver_host,model.node_receiver_port)
+        if model.node_name in self._listener_nodes:
+            if self._listener_nodes[model.node_name]!=(model.node_receiver_host,model.node_receiver_port):
+                self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
+                obeyon_rfs.log_info("updated",model.node_name,model.node_receiver_host,model.node_receiver_port)
+
         match model.message_type:
             case ORFS_MessageType.CORE_PING:
                 # print("pong")
+                
                 writer.write(ORFS_Message(
                     message_type=ORFS_MessageType.CORE_PONG,
                     message_name='pong',
@@ -35,15 +45,15 @@ class LocalNetworkCoreNode(Node):
                 await writer.drain()
                 writer.close()
                 await writer.wait_closed()
-            case ORFS_MessageType.REGISTER_NODE:
+            # case ORFS_MessageType.REGISTER_NODE:
 
-                if model.node_name in self._listener_nodes:
-                    obeyon_rfs.log_info("removed",model.node_name)
-                    del self._listener_nodes[model.node_name]
-                if model.node_receiver_host==self.receiver_host and model.node_receiver_port==self.receiver_port:
-                    return
-                obeyon_rfs.log_info("register",model.node_name,model.node_receiver_host,model.node_receiver_port)
-                self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
+            #     if model.node_name in self._listener_nodes:
+            #         obeyon_rfs.log_info("removed",model.node_name)
+            #         del self._listener_nodes[model.node_name]
+            #     if model.node_receiver_host==self.receiver_host and model.node_receiver_port==self.receiver_port:
+            #         return
+            #     obeyon_rfs.log_info("register",model.node_name,model.node_receiver_host,model.node_receiver_port)
+            #     self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
 
         #forward to registerd nodes
         if model.message_type in [

@@ -70,6 +70,7 @@ class Node(ORFS_Component):
                 await self._handle_action_feedback(model)
             case ORFS_MessageType.ACTION_RESULT:
                 await self._handle_action_result(model)
+
         for handle_client in self.additional_handle_client_callbacks:
             await handle_client(model,reader,writer)
     async def _handle_publish(self,model:ORFS_Message):
