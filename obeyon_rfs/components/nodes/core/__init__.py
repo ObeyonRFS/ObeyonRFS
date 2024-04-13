@@ -1,1 +1,1 @@
-from obeyon_rfs.components.nodes.core.core_node import *
+from obeyon_rfs.components.nodes.core.local_network_core_node import *

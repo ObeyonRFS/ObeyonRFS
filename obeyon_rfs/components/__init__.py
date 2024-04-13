@@ -1,9 +1,7 @@
-from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 from uuid import UUID, uuid4
 from pydantic import BaseModel, Extra, Field
-import pickle
 import base64
 
 
@@ -34,8 +32,10 @@ class ORFS_MessageType(str,Enum):
     CORE_PING = 'CORE_PING'
     CORE_PONG = 'CORE_PONG'
 
-@dataclass
-class ORFS_Message:
+class ORFS_Message(BaseModel):
+    """
+        Message for communication between nodes
+    """
     message_type: ORFS_MessageType
     message_name: str   #like topic,srv_name,action_name
     message_content: Any
@@ -45,23 +45,20 @@ class ORFS_Message:
     #responable by writer only. So no use
     # client_host: str
     # client_port: int
-    message_uuid: UUID = field(default_factory=uuid4)
-    def _serialize(self)->bytes:
-        return pickle.dumps(self)
+    message_uuid: UUID = Field(default_factory=uuid4)
+    
     def base64_encode(self)->bytes:
-        return base64.b64encode(self._serialize())
-    @staticmethod
-    def _deserialize(data:bytes)->'ORFS_Message':
-        return pickle.loads(data)
+        return base64.b64encode(self.json().encode())
+    
     @staticmethod
     def base64_decode(data:bytes)->'ORFS_Message':
         data=data.strip()
         try:
-            return pickle.loads(base64.b64decode(data))
+            json_str=base64.b64decode(data).decode()
+            return ORFS_Message.parse_raw(json_str)
         except Exception as e:
             print(repr(e))
             return None
-
 
 
 from obeyon_rfs.components.nodes import *

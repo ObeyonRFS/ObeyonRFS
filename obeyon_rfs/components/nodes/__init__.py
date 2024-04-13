@@ -52,7 +52,7 @@ class Node(ORFS_Component):
         if model is None:
             return
         
-        print(model)
+        # print(model)
         # if model.message_type!=ORFS_MessageType.CORE_PING:
         #     obeyon_rfs.log_info(model)
         match model.message_type:
@@ -105,8 +105,10 @@ class Node(ORFS_Component):
         for start_callback in self.additional_start_callbacks:
             tasks.append(asyncio.create_task(start_callback()))
         await asyncio.gather(*tasks)
-    def start(self) -> NoReturn:
+    def start_as_main(self) -> NoReturn:
         asyncio.run(self._start())
+    async def start_as_task(self):
+        return asyncio.create_task(self._start())
 
     
     def create_publisher(self,topic:str,msg_type:Type[MessageType]|None)->'Publisher':

@@ -1,9 +1,6 @@
-from dataclasses import dataclass
 from pydantic import BaseModel
 
-
-@dataclass
-class Vector3D:
+class Vector3D(BaseModel):
     x: float
     y: float
     z: float

@@ -1,16 +1,14 @@
-from obeyon_rfs.datatypes import *
 from typing import Type, get_type_hints
+from pydantic import BaseModel
+from obeyon_rfs.datatypes import *
 
-@dataclass
-class ServiceRequestType:
+class ServiceRequestType(BaseModel):
     pass
 
-@dataclass
-class ServiceResponseType:
+class ServiceResponseType(BaseModel):
     pass
 
-@dataclass
-class ServiceType:
+class ServiceType(BaseModel):
     request: ServiceRequestType
     response: ServiceResponseType
     @staticmethod
@@ -21,14 +19,13 @@ class ServiceType:
         return get_type_hints(srv_type)["response"]
     
 
-@dataclass
 class AddTwoIntsRequestType(ServiceRequestType):
     a:float
     b:float
-@dataclass
+
 class AddTwoIntsResponseType(ServiceResponseType):
     result:float
-@dataclass
+
 class AddTwoIntsType(ServiceType):
     request:AddTwoIntsRequestType
     response:AddTwoIntsResponseType

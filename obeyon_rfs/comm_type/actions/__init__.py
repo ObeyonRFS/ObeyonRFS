@@ -1,17 +1,14 @@
 from obeyon_rfs.datatypes import *
 from typing import Type, get_type_hints
 
-@dataclass
-class ActionRequestType: # request with goal or task
+
+class ActionRequestType(BaseModel): # request with goal or task
     pass
-@dataclass
-class ActionFeedbackType:
+class ActionFeedbackType(BaseModel):
     pass
-@dataclass
-class ActionResultType:
+class ActionResultType(BaseModel):
     pass
-@dataclass
-class ActionType:
+class ActionType(BaseModel):
     request:ActionRequestType
     feedback:ActionFeedbackType
     result:ActionResultType
@@ -25,17 +22,16 @@ class ActionType:
     def get_result_type(action_type:Type['ActionType'])->Type[ActionResultType]:
         return get_type_hints(action_type)["result"]
 
-@dataclass
 class CountingActionRequestType(ActionRequestType):
     count:int
     counting_delay:float
-@dataclass
+
 class CountingActionFeedbackType(ActionFeedbackType):
     current_number:int
-@dataclass
+
 class CountingActionResultType(ActionResultType):
     final_number:int
-@dataclass
+
 class CountingActionType(ActionType):
     request:CountingActionRequestType
     feedback:CountingActionFeedbackType

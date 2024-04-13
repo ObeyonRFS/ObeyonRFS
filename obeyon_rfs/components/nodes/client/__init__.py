@@ -14,7 +14,7 @@ class ClientNode(Node):
             receiver_host=socket.gethostbyname(socket.gethostname()),
             receiver_port=0
         )
-        self.core_ping_timer=self.create_timer(3.0,self.ping_to_core)
+        self.core_ping_timer=self.create_timer(0.01,self.ping_to_core)
         self.core_host=core_host
         self.core_port=core_port
         self.additional_start_callbacks.append(self.__additional_start_callback)
@@ -70,7 +70,7 @@ class ClientNode(Node):
 
 
 
-from obeyon_rfs.components.nodes.core_searcher.tcp_core_searcher_node import TCPCoreSearcherNode
+
 from obeyon_rfs.components.nodes.client.app_node import AppNode
 from obeyon_rfs.components.nodes.client.serial_driver_node import SerialDriverNode
 from obeyon_rfs.components.nodes.client.http_node import HttpNode

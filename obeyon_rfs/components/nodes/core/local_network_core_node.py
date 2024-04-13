@@ -8,7 +8,10 @@ import socket
 import asyncio
 import obeyon_rfs
 
-class CoreNode(Node):
+class LocalNetworkCoreNode(Node):
+    """
+        Core node for local network communication
+    """
     def __init__(self,node_name:str,use_port:int=7134):
         super().__init__(
             node_name=node_name,
@@ -18,7 +21,7 @@ class CoreNode(Node):
         self._listener_nodes:Dict[str,Tuple[str,int]] = {}
         self.additional_handle_client_callbacks.append(self.__additional_handle_client)
     async def __additional_handle_client(self,model:ORFS_Message,reader:StreamReader,writer:StreamWriter):
-        print("additional",model)
+        # print("additional",model)
         match model.message_type:
             case ORFS_MessageType.CORE_PING:
                 # print("pong")
