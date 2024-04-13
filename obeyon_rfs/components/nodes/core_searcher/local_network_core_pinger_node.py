@@ -69,6 +69,8 @@ class LocalNetworkCorePingerNode(Node):
             except OSError as e:
                 if e.errno==111: #Basically connection refused I guess
                     pass
+                else:
+                    raise e
         tasks=[]
         for i in range(0,255):
             ip_address_digits=[]
