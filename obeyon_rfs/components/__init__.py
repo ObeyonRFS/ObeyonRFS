@@ -57,6 +57,7 @@ class ORFS_Message(BaseModel):
     def base64_decode(data:bytes)->'ORFS_Message':
         data=data.strip()
         try:
+            print(data)
             json_str=base64.b64decode(data).decode()
             print(json_str)
             return ORFS_Message.parse_raw(json_str)
