@@ -100,9 +100,9 @@ class LocalNetworkCorePingerNode(Node):
     def return_core_host_port(self)->Tuple[str,int]:
         cores=map(lambda x:(x.node_receiver_host,x.node_receiver_port),self.pong_cores)
         cores=list(set(cores))
-        if len(self.pong_cores)==0:
+        if len(cores)==0:
             sys.exit('No CoreNode found.')
-        if len(self.pong_cores)>1:
+        if len(cores)>1:
             sys.exit('Multiple CoreNode found.')
         core=cores[0]
         return core
