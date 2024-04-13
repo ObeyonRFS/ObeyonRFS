@@ -100,7 +100,7 @@ class LocalNetworkCoreNode(Node):
                 return
             
             for node_name,(dest_host,dest_port) in list(self._listener_nodes.items()):
-                print("Forwarding model",model,"to",node_name,dest_host,dest_port)
+                # print("Forwarding model",model,"to",node_name,dest_host,dest_port)
                 try:
                     dest_reader,dest_writer = await asyncio.wait_for(asyncio.open_connection(dest_host,dest_port),timeout=0.5)
                 except ConnectionRefusedError as e:
@@ -123,7 +123,7 @@ class LocalNetworkCoreNode(Node):
                     raise e
                 dest_writer.write(model.base64_encode())
                 await dest_writer.drain()
-                obeyon_rfs.log_info("forwarded to",node_name,dest_host,dest_port)
+                # obeyon_rfs.log_info("forwarded to",node_name,dest_host,dest_port)
                 dest_writer.close()
                 await dest_writer.wait_closed()
     async def sent_model_to_core(self,model:ORFS_Message):
