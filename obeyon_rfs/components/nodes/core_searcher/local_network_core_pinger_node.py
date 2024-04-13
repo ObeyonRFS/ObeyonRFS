@@ -70,7 +70,7 @@ class LocalNetworkCorePingerNode(Node):
                 if e.errno==111: #Basically connection refused I guess
                     pass
         tasks=[]
-        for i in range(0,50):
+        for i in range(0,255):
             ip_address_digits=[]
             for v,mask in zip(current_ip.split('.'),self.subnet_mask.split('.')):
                 if mask=='0':
