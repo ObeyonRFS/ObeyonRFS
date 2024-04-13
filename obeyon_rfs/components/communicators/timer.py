@@ -6,17 +6,22 @@ if TYPE_CHECKING:
 
 
 class Timer(ORFS_Component):
-    def __init__(self,timer_interval:float,coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None):
+    def __init__(self,timer_interval:float,coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None,max_count:int=-1):
         super().__init__()
         self.parent:Node = None
         self.timer_interval=timer_interval
         self.coroutine_callback=coroutine_callback
+        self.counting=0
+        self.max_count=max_count
     
     async def _start(self):
         while True:
             await asyncio.sleep(self.timer_interval)
             if self.coroutine_callback is not None:
                 await self.coroutine_callback()
+            self.counting+=1
+            if self.max_count>=0 and self.counting>=self.max_count:
+                break
             # if self.callback is Coroutines:
             #     await self.callback()
             # elif self.callback is not None:

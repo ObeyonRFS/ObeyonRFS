@@ -16,8 +16,9 @@ from obeyon_rfs.comm_type.actions import (
 from obeyon_rfs.components.communicators import *
 
 class Node(ORFS_Component):
-    def __init__(self,node_name:str,receiver_host:str,receiver_port:int):
+    def __init__(self,node_name:str,receiver_host:str,receiver_port:int,domain_name=""):
         super().__init__()
+        self.domain_name=domain_name
         self.node_name=node_name
         self.publishers:List['Publisher'] = []
         self.subscribers:List['Subscriber'] = []
@@ -44,12 +45,15 @@ class Node(ORFS_Component):
         )
         self.receiver_host,self.receiver_port=self.receiver_server.sockets[0].getsockname()
         async with self.receiver_server:
-            print(f"{self.node_name}'s receiver {self.receiver_host}:{self.receiver_port}")
+            obeyon_rfs.log_info(f"{self.node_name}'s receiver {self.receiver_host}:{self.receiver_port} with domain {repr(self.domain_name)} started...")
             await self.receiver_server.serve_forever()
-    async def _handle_client(self,reader,writer):
+    async def _handle_client(self,reader:StreamWriter,writer:StreamReader):
         data = await reader.read(2048)
         model = ORFS_Message.base64_decode(data)
         if model is None:
+            return
+        if model.domain_name!=self.domain_name:
+            #ignore other domain
             return
         
         # print(model)
@@ -106,10 +110,21 @@ class Node(ORFS_Component):
         for start_callback in self.additional_start_callbacks:
             tasks.append(asyncio.create_task(start_callback()))
         await asyncio.gather(*tasks,return_exceptions=True)
-    def start_as_main(self) -> NoReturn:
-        asyncio.run(self._start())
+    def start_as_main(self,exit_time:float=float('inf')) -> NoReturn | None:
+        if exit_time!=float('inf'):
+            self.create_timer(exit_time,self.stop_main)
+            try:
+                asyncio.run(self._start())
+            except RuntimeError as e:
+                # obeyon_rfs.log_error(repr(e))
+                pass
+        else:
+            asyncio.run(self._start())
     async def start_as_task(self):
         return asyncio.create_task(self._start())
+    async def stop_main(self):
+        asyncio.get_event_loop().stop()
+
 
     
     def create_publisher(self,topic:str,msg_type:Type[MessageType]|None)->'Publisher':
@@ -142,8 +157,8 @@ class Node(ORFS_Component):
         s.parent=self
         self.action_clients.append(s)
         return s
-    def create_timer(self,timer_interval:float,coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None) -> 'Timer':
-        t=Timer(timer_interval=timer_interval,coroutine_callback=coroutine_callback)
+    def create_timer(self,timer_interval:float,coroutine_callback:Callable[[],Coroutine[Any,Any,None]]=None,max_count=-1) -> 'Timer':
+        t=Timer(timer_interval=timer_interval,coroutine_callback=coroutine_callback,max_count=max_count)
         t.parent=self
         self.timers.append(t)
         return t

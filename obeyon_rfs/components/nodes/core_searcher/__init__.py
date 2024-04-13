@@ -1,1 +1,1 @@
-from obeyon_rfs.components.nodes.core_searcher.local_network_core_searcher_node import *
+from obeyon_rfs.components.nodes.core_searcher.local_network_core_pinger_node import *

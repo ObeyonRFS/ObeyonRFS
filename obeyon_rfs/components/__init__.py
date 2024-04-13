@@ -31,6 +31,8 @@ class ORFS_MessageType(str,Enum):
     ACTION_RESULT = 'ACTION_RESULT'
     CORE_PING = 'CORE_PING'
     CORE_PONG = 'CORE_PONG'
+    BROADCAST_CORE_PING = 'BROADCAST_CORE_PING'
+    BROADCAST_CORE_PONG = 'BROADCAST_CORE_PONG'
 
 class ORFS_Message(BaseModel):
     """
@@ -46,6 +48,7 @@ class ORFS_Message(BaseModel):
     # client_host: str
     # client_port: int
     message_uuid: UUID = Field(default_factory=uuid4)
+    domain_name:str = ""
     
     def base64_encode(self)->bytes:
         return base64.b64encode(self.json().encode())

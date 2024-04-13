@@ -11,11 +11,12 @@ class LocalNetworkCoreNode(Node):
     """
         Core node for local network communication
     """
-    def __init__(self,node_name:str,use_port:int=7134):
+    def __init__(self,node_name:str,use_port:int=7134,domain_name:str=""):
         super().__init__(
             node_name=node_name,
             receiver_host=obeyon_rfs.get_local_ip_address(),
-            receiver_port=use_port
+            receiver_port=use_port,
+            domain_name=domain_name
         )
         self._listener_nodes:Dict[str,Tuple[str,int]] = {}
         self.additional_handle_client_callbacks.append(self.__additional_handle_client)
@@ -29,22 +30,44 @@ class LocalNetworkCoreNode(Node):
             if self._listener_nodes[model.node_name]!=(model.node_receiver_host,model.node_receiver_port):
                 self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
                 obeyon_rfs.log_info("updated",model.node_name,model.node_receiver_host,model.node_receiver_port)
-
+        
         match model.message_type:
             case ORFS_MessageType.CORE_PING:
-                # print("pong")
-                
                 writer.write(ORFS_Message(
                     message_type=ORFS_MessageType.CORE_PONG,
                     message_name='pong',
                     message_content={},
                     node_name=self.node_name,
                     node_receiver_host=self.receiver_host,
-                    node_receiver_port=self.receiver_port
+                    node_receiver_port=self.receiver_port,
+                    domain_name=self.domain_name
                 ).base64_encode())
                 await writer.drain()
                 writer.close()
                 await writer.wait_closed()
+            case ORFS_MessageType.BROADCAST_CORE_PING:
+                try:
+                    dest_reader,dest_writer = await asyncio.open_connection(model.node_receiver_host,model.node_receiver_port)
+                    dest_writer.write(ORFS_Message(
+                        message_type=ORFS_MessageType.CORE_PONG,
+                        message_name='pong',
+                        message_content={},
+                        node_name=self.node_name,
+                        node_receiver_host=self.receiver_host,
+                        node_receiver_port=self.receiver_port,
+                        domain_name=self.domain_name
+                    ).base64_encode())
+                except ConnectionRefusedError as e:
+                    obeyon_rfs.log_info("ConnectionRefusedError")
+                    return
+                except TimeoutError as e:
+                    obeyon_rfs.log_info("TimeoutError")
+                    return
+                except OSError as e:
+                    if e.errno==10049:
+                        obeyon_rfs.log_info(e)
+                        return
+                
             # case ORFS_MessageType.REGISTER_NODE:
 
             #     if model.node_name in self._listener_nodes:
@@ -70,7 +93,21 @@ class LocalNetworkCoreNode(Node):
                 try:
                     dest_reader,dest_writer = await asyncio.open_connection(dest_host,dest_port)
                 except ConnectionRefusedError as e:
+                    #remove node
+                    del self._listener_nodes[node_name]
+                    obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
                     continue
+                except TimeoutError as e:
+                    #remove node
+                    del self._listener_nodes[node_name]
+                    obeyon_rfs.log_info("removed",node_name, "TimeoutError")
+                    continue
+                except OSError as e:
+                    if e.errno==10049:
+                        #remove node
+                        del self._listener_nodes[node_name]
+                        obeyon_rfs.log_info("removed",node_name, e)
+                        continue
                 dest_writer.write(model.base64_encode())
                 await dest_writer.drain()
                 dest_writer.close()
