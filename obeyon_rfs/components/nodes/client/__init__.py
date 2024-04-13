@@ -34,7 +34,7 @@ class ClientNode(Node):
             await writer.drain()
             await asyncio.sleep(2.0)
             # data = await reader.read(2048)
-            data = await asyncio.wait_for(reader.read(2048),timeout=self.search_timeout)
+            data = await asyncio.wait_for(reader.read(2048),timeout=0.2)
             model = ORFS_Message.base64_decode(data)
             if model is not None:
                 if model.message_type==ORFS_MessageType.CORE_PONG:
