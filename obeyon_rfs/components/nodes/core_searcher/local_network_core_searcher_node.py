@@ -50,6 +50,9 @@ class LocalNetworkCoreSearcherNode(Node):
                 pass
             except TimeoutError as e:
                 pass
+            except OSError as e:
+                if e.errno==111: #Basically connection refused I guess
+                    pass
             return None
         tasks=[]
         for i in range(1,255):
