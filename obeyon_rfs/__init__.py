@@ -11,7 +11,10 @@ def log_info(*values):
 
 
 def get_local_ip_address():
-    return socket.gethostbyname(socket.gethostname()+'.local')
+    try:
+        return socket.gethostbyname(socket.gethostname()+'.local')
+    except socket.gaierror:
+        return socket.gethostbyname(socket.gethostname())
 
 def get_public_ip_address():
     resp= requests.get('https://api.ipify.org')
