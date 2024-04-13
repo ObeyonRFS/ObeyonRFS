@@ -22,7 +22,7 @@ class LocalNetworkCoreNode(Node):
         self._listener_nodes:Dict[str,Tuple[str,int]] = {}
         self.additional_handle_client_callbacks.append(self.__additional_handle_client)
     async def __additional_handle_client(self,model:ORFS_Message,reader:StreamReader,writer:StreamWriter):
-        print("additional",model)
+        # print("additional",model)
         # register with model message instead (include every types)
         if model.node_name not in self._listener_nodes:
             self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
