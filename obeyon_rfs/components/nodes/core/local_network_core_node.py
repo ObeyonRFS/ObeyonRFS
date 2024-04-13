@@ -99,6 +99,7 @@ class LocalNetworkCoreNode(Node):
             if model.node_name not in self._listener_nodes:
                 return
             print("Forwarding model",model)
+            print(list(self._listener_nodes.items()))
             for node_name,(dest_host,dest_port) in list(self._listener_nodes.items()):
                 try:
                     dest_reader,dest_writer = await asyncio.open_connection(dest_host,dest_port)
