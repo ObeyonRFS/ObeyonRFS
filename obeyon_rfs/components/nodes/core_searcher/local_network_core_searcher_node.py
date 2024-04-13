@@ -3,7 +3,6 @@ from typing import TYPE_CHECKING, List, Tuple
 
 from obeyon_rfs.components import ORFS_Message, ORFS_MessageType
 import dns.resolver
-import socket
 # import aioping
 import asyncio
 import sys
@@ -24,7 +23,7 @@ class LocalNetworkCoreSearcherNode(Node):
     async def _search_host_port(self)->Tuple[str,int]:
         obeyon_rfs.log_info("Searching CoreNode...")
         obeyon_rfs.log_info("Searching accessible sockets...")
-        current_ip=socket.gethostbyname(socket.gethostname())
+        current_ip=obeyon_rfs.get_local_ip_address()
         dns_servers = dns.resolver.Resolver().nameservers
         async def ping_core_append(ip_address,port):
             try:
