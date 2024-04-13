@@ -64,11 +64,14 @@ class LocalNetworkCorePingerNode(Node):
                 writer.close()
                 await writer.wait_closed()
             except ConnectionRefusedError as e:
+                obeyon_rfs.log_info(f"Connection refused on {ip_address}:{port}")
                 pass
             except TimeoutError as e:
+                obeyon_rfs.log_info(f"Timeout on {ip_address}:{port}")
                 pass
             except OSError as e:
                 if e.errno==111: #Basically connection refused I guess
+                    obeyon_rfs.log_info(f"Connection refused 2 on {ip_address}:{port}")
                     pass
                 else:
                     raise e
