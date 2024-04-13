@@ -33,7 +33,7 @@ class LocalNetworkCorePingerNode(Node):
 
     async def broadcast_ping(self):
         # obeyon_rfs.log_info(self.pong_cores)
-        obeyon_rfs.log_info("Broadcasting ping...")
+        # obeyon_rfs.log_info("Broadcasting ping...")
         # obeyon_rfs.log_info("Waiting node receiver server...")
         while True:
             await asyncio.sleep(0)
@@ -47,7 +47,7 @@ class LocalNetworkCorePingerNode(Node):
             try:
                 # obeyon_rfs.log_info(f"Testing {port} port on {ip_address}...")
                 reader,writer = await asyncio.wait_for(asyncio.open_connection(ip_address,port),timeout=self.search_timeout)
-                obeyon_rfs.log_info(f"Connected to {ip_address}:{port}")
+                # obeyon_rfs.log_info(f"Connected to {ip_address}:{port}")
                 model=ORFS_Message(
                     message_type=ORFS_MessageType.BROADCAST_CORE_PING,
                     message_name='ping',
@@ -65,14 +65,14 @@ class LocalNetworkCorePingerNode(Node):
                 writer.close()
                 await writer.wait_closed()
             except ConnectionRefusedError as e:
-                obeyon_rfs.log_info(f"Connection refused on {ip_address}:{port}")
+                # obeyon_rfs.log_info(f"Connection refused on {ip_address}:{port}")
                 pass
             except TimeoutError as e:
-                obeyon_rfs.log_info(f"Timeout on {ip_address}:{port}")
+                # obeyon_rfs.log_info(f"Timeout on {ip_address}:{port}")
                 pass
             except OSError as e:
                 if e.errno==111: #Basically connection refused I guess
-                    obeyon_rfs.log_info(f"Connection refused 2 on {ip_address}:{port}")
+                    # obeyon_rfs.log_info(f"Connection refused OS on {ip_address}:{port}")
                     pass
                 else:
                     raise e
@@ -107,7 +107,7 @@ class LocalNetworkCorePingerNode(Node):
         core=cores[0]
         return core
     
-    def start_as_main(self,exit_time:float=5.0) -> NoReturn | None:
+    def start_as_main(self,exit_time:float=10.0) -> NoReturn | None:
         super().start_as_main(exit_time=exit_time)
         
 
