@@ -42,6 +42,7 @@ class LocalNetworkCorePingerNode(Node):
         # obeyon_rfs.log_info("Searching accessible sockets...")
         current_ip=obeyon_rfs.get_local_ip_address()
         dns_servers = dns.resolver.Resolver().nameservers
+        print(dns_servers)
         async def ping_core(ip_address,port):
             try:
                 # obeyon_rfs.log_info(f"Testing {port} port on {ip_address}...")
