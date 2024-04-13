@@ -79,14 +79,14 @@ class LocalNetworkCoreNode(Node):
             #     obeyon_rfs.log_info("register",model.node_name,model.node_receiver_host,model.node_receiver_port)
             #     self._listener_nodes[model.node_name]=(model.node_receiver_host,model.node_receiver_port)
 
-        print("Check bool",model.message_type in [
-            ORFS_MessageType.PUBLISH,
-            ORFS_MessageType.SERVICE_REQUEST,
-            ORFS_MessageType.SERVICE_RESPONSE,
-            ORFS_MessageType.ACTION_REQUEST,
-            ORFS_MessageType.ACTION_FEEDBACK,
-            ORFS_MessageType.ACTION_RESULT
-        ],model)
+        # print("Check bool",model.message_type in [
+        #     ORFS_MessageType.PUBLISH,
+        #     ORFS_MessageType.SERVICE_REQUEST,
+        #     ORFS_MessageType.SERVICE_RESPONSE,
+        #     ORFS_MessageType.ACTION_REQUEST,
+        #     ORFS_MessageType.ACTION_FEEDBACK,
+        #     ORFS_MessageType.ACTION_RESULT
+        # ],model)
         #forward to registerd nodes
         if model.message_type in [
             ORFS_MessageType.PUBLISH,
@@ -96,8 +96,9 @@ class LocalNetworkCoreNode(Node):
             ORFS_MessageType.ACTION_FEEDBACK,
             ORFS_MessageType.ACTION_RESULT
         ]:
-            # if model.node_name not in self._listener_nodes:
-            #     return
+            if model.node_name not in self._listener_nodes:
+                return
+            print("Forwarding from",model.node_name,model.node_receiver_host,model.node_receiver_port)
             for node_name,(dest_host,dest_port) in list(self._listener_nodes.items()):
                 try:
                     dest_reader,dest_writer = await asyncio.open_connection(dest_host,dest_port)
