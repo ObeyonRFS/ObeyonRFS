@@ -1,7 +1,0 @@
-package_creation:
-  authors:
-    - "Your name <your.email@example.com>"
-  maintainers:
-    - "Your name <your.email@example.com>"
-  license:
-    fullname : "Your name"
