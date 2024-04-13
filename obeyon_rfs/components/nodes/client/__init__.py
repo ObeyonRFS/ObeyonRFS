@@ -67,6 +67,7 @@ class ClientNode(Node):
             sys.exit('CoreNode connection timeout')
         writer.write(model.base64_encode())
         await writer.drain()
+        obeyon_rfs.log_info("Sent model to core:",model)
         writer.close()
         await writer.wait_closed()
     async def __additional_start_callback(self):
