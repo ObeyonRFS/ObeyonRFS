@@ -51,15 +51,10 @@ class ServiceClient(ORFS_Component):
     async def recv_model(self,model:ORFS_Message):
         if model.message_name!=self.srv_name:
             return
-        if not isinstance(model.message_content,self.srv_response_type):
-            raise TypeError('message type is not matched')
-        else:
-            for uuid,f in self._futures.items():
-                if uuid==model.message_uuid:
-                    # asyncio.create_task(self.future_with_model(model,f))
-                    f.response=model.message_content
-                    # if f.response_callback is not None:
-                    #     f.response_callback(model.message_content)
+        srv_response=self.srv_response_type.validate(model.message_content)
+        for uuid,f in self._futures.items():
+            if uuid==model.message_uuid:
+                f.response=srv_response
     async def future_with_model(self,model:ORFS_Message,response):
         pass
     async def send_request(self,req:ServiceRequestType,timeout=5.0) -> Future:
