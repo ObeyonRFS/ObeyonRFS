@@ -13,10 +13,10 @@ class Publisher(ORFS_Component):
         self.parent:ClientNode = None
         self.topic=topic
         self.msg_type=msg_type
-    async def publish(self,msg:MessageType):
+    def publish(self,msg:MessageType):
         if not isinstance(msg,self.msg_type):
             raise TypeError('message type is not matched')
-        await self.parent.sent_model_to_core(ORFS_Message(
+        self.parent.sent_model_to_core(ORFS_Message(
             message_type=ORFS_MessageType.PUBLISH,
             message_name=self.topic,
             message_content=msg,
