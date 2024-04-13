@@ -21,7 +21,7 @@ class ClientNode(Node):
         self.additional_start_callbacks.append(self.__additional_start_callback)
     async def ping_to_core(self):
         try:
-            reader,writer = await asyncio.open_connection(self.core_host,self.core_port)
+            reader,writer = await asyncio.wait_for(asyncio.open_connection(self.core_host,self.core_port),timeout=0.5)
         
             writer.write(ORFS_Message(
                 message_type=ORFS_MessageType.CORE_PING,
