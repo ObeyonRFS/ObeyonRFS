@@ -84,7 +84,7 @@ class ServiceClient(ORFS_Component):
         new_future.future_type=FutureType.SERVICE
         new_future.response_timeout=timeout
         self._futures[model.message_uuid]=new_future
-        self.parent.sent_model_to_core(model)
+        await self.parent.sent_model_to_core(model)
 
         # asyncio.create_task(self.clear_timeout_futures(new_future))
         
