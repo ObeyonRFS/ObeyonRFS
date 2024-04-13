@@ -119,6 +119,7 @@ class LocalNetworkCoreNode(Node):
                         self._listener_nodes.pop(node_name,None)
                         obeyon_rfs.log_info("removed",node_name, "ConnectionRefusedError")
                         continue
+                    raise e
                 dest_writer.write(model.base64_encode())
                 await dest_writer.drain()
                 obeyon_rfs.log_info("forwarded to",node_name,dest_host,dest_port)
