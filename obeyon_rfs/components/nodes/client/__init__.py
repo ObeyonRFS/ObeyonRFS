@@ -22,24 +22,27 @@ class ClientNode(Node):
     async def ping_to_core(self):
         try:
             reader,writer = await asyncio.open_connection(self.core_host,self.core_port)
+        
+            writer.write(ORFS_Message(
+                message_type=ORFS_MessageType.CORE_PING,
+                message_name='ping',
+                message_content={},
+                node_name=self.node_name,
+                node_receiver_host=self.receiver_host,
+                node_receiver_port=self.receiver_port
+            ).base64_encode())
+            await writer.drain()
+            await asyncio.sleep(2.0)
+            # data = await reader.read(2048)
+            data = await asyncio.wait_for(reader.read(2048),timeout=self.search_timeout)
+            model = ORFS_Message.base64_decode(data)
+            if model is not None:
+                if model.message_type==ORFS_MessageType.CORE_PONG:
+                    return
         except ConnectionRefusedError as e:
             sys.exit('CoreNode connection lost')
-        writer.write(ORFS_Message(
-            message_type=ORFS_MessageType.CORE_PING,
-            message_name='ping',
-            message_content={},
-            node_name=self.node_name,
-            node_receiver_host=self.receiver_host,
-            node_receiver_port=self.receiver_port
-        ).base64_encode())
-        await writer.drain()
-        await asyncio.sleep(2.0)
-        data = await reader.read(2048)
-        model = ORFS_Message.base64_decode(data)
-        if model is not None:
-            if model.message_type==ORFS_MessageType.CORE_PONG:
-                return
-        sys.exit('CoreNode connection lost')
+        except TimeoutError as e:
+            sys.exit('CoreNode connection timeout')
     async def register_to_core(self):
         while self.receiver_port==0:
             await asyncio.sleep(0)

@@ -1,5 +1,6 @@
 
 from typing import TYPE_CHECKING, List, Tuple
+import uuid
 
 from obeyon_rfs.components import ORFS_Message, ORFS_MessageType
 import dns.resolver
@@ -12,7 +13,7 @@ from obeyon_rfs.components.nodes import Node
 class LocalNetworkCoreSearcherNode(Node):
     def __init__(self,search_timeout=4.0,search_on_port=7134,subnet_mask="255.255.255.0"):
         super().__init__(
-            node_name="temp_node",
+            node_name="temp_node"+uuid.uuid4().hex,
             receiver_host=obeyon_rfs.get_local_ip_address(),
             receiver_port=0
         )
