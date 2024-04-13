@@ -57,9 +57,9 @@ class LocalNetworkCorePingerNode(Node):
                     node_receiver_port=self.receiver_port,
                     domain_name=self.domain_name
                 )
-                print("Sending:",model)
+                # print("Sending:",model)
                 b64_model=model.base64_encode()
-                print("Sending:",b64_model)
+                # print("Sending:",b64_model)
                 writer.write(b64_model)
                 await writer.drain()
                 writer.close()

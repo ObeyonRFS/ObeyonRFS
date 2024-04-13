@@ -49,7 +49,7 @@ class Node(ORFS_Component):
             await self.receiver_server.serve_forever()
     async def _handle_client(self,reader:StreamWriter,writer:StreamReader):
         data = await reader.read(2048)
-        print("Received data:",data)
+        # print("Received data:",data)
         model = ORFS_Message.base64_decode(data)
         if model is None:
             return
