@@ -44,8 +44,9 @@ class LocalNetworkCorePingerNode(Node):
         dns_servers = dns.resolver.Resolver().nameservers
         async def ping_core(ip_address,port):
             try:
-                obeyon_rfs.log_info(f"Testing {port} port on {ip_address}...")
+                # obeyon_rfs.log_info(f"Testing {port} port on {ip_address}...")
                 reader,writer = await asyncio.wait_for(asyncio.open_connection(ip_address,port),timeout=self.search_timeout)
+                obeyon_rfs.log_info(f"Connected to {ip_address}:{port}")
                 model=ORFS_Message(
                     message_type=ORFS_MessageType.BROADCAST_CORE_PING,
                     message_name='ping',
