@@ -46,7 +46,7 @@ class LocalNetworkCorePingerNode(Node):
             try:
                 # obeyon_rfs.log_info(f"Testing {port} port on {ip_address}...")
                 reader,writer = await asyncio.wait_for(asyncio.open_connection(ip_address,port),timeout=self.search_timeout)
-                writer.write(ORFS_Message(
+                model=ORFS_Message(
                     message_type=ORFS_MessageType.BROADCAST_CORE_PING,
                     message_name='ping',
                     message_content={},
@@ -54,7 +54,11 @@ class LocalNetworkCorePingerNode(Node):
                     node_receiver_host=self.receiver_host,
                     node_receiver_port=self.receiver_port,
                     domain_name=self.domain_name
-                ).base64_encode())
+                )
+                print("Sending:",model)
+                b64_model=model.base64_encode()
+                print("Sending:",b64_model)
+                writer.write(b64_model)
                 await writer.drain()
                 writer.close()
                 await writer.wait_closed()
