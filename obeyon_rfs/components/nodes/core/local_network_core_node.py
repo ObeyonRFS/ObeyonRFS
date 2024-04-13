@@ -102,7 +102,7 @@ class LocalNetworkCoreNode(Node):
             for node_name,(dest_host,dest_port) in list(self._listener_nodes.items()):
                 print("Forwarding model",model,"to",node_name,dest_host,dest_port)
                 try:
-                    dest_reader,dest_writer = await asyncio.open_connection(dest_host,dest_port)
+                    dest_reader,dest_writer = await asyncio.wait_for(asyncio.open_connection(dest_host,dest_port),timeout=0.5)
                 except ConnectionRefusedError as e:
                     #remove node
                     self._listener_nodes.pop(node_name,None)
