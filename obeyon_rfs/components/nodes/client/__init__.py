@@ -4,6 +4,7 @@ import socket
 
 import asyncio
 import sys
+import obeyon_rfs
 from obeyon_rfs.components import ORFS_Component, ORFS_MessageType,ORFS_Message
 from obeyon_rfs.components.nodes import Node
 
@@ -11,7 +12,7 @@ class ClientNode(Node):
     def __init__(self,node_name:str,core_host:str,core_port:int):
         super().__init__(
             node_name=node_name,
-            receiver_host=socket.gethostbyname(socket.gethostname()),
+            receiver_host=obeyon_rfs.get_local_ip_address(),
             receiver_port=0
         )
         self.core_ping_timer=self.create_timer(0.01,self.ping_to_core)

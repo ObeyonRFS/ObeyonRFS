@@ -4,7 +4,6 @@ from obeyon_rfs.components.nodes import Node
 from asyncio import StreamReader, StreamWriter
 from obeyon_rfs.components import ORFS_Message, ORFS_MessageType
 
-import socket
 import asyncio
 import obeyon_rfs
 
@@ -15,7 +14,7 @@ class LocalNetworkCoreNode(Node):
     def __init__(self,node_name:str,use_port:int=7134):
         super().__init__(
             node_name=node_name,
-            receiver_host=socket.gethostbyname(socket.gethostname()),
+            receiver_host=obeyon_rfs.get_local_ip_address(),
             receiver_port=use_port
         )
         self._listener_nodes:Dict[str,Tuple[str,int]] = {}
