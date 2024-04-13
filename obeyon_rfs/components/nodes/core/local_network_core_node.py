@@ -86,7 +86,7 @@ class LocalNetworkCoreNode(Node):
             ORFS_MessageType.ACTION_REQUEST,
             ORFS_MessageType.ACTION_FEEDBACK,
             ORFS_MessageType.ACTION_RESULT
-        ])
+        ],model)
         #forward to registerd nodes
         if model.message_type in [
             ORFS_MessageType.PUBLISH,
