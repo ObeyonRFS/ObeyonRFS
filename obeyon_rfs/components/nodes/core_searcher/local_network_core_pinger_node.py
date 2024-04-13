@@ -33,7 +33,7 @@ class LocalNetworkCorePingerNode(Node):
 
     async def broadcast_ping(self):
         # obeyon_rfs.log_info(self.pong_cores)
-        # obeyon_rfs.log_info("Broadcasting ping...")
+        obeyon_rfs.log_info("Broadcasting ping...")
         # obeyon_rfs.log_info("Waiting node receiver server...")
         while True:
             await asyncio.sleep(0)
