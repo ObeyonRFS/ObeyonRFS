@@ -16,7 +16,7 @@ from obeyon_rfs.components import (
 )
 
 if TYPE_CHECKING:
-    from obeyon_rfs.components.nodes import ClientNode, ActionFuture
+    from obeyon_rfs.components import ClientNode, ActionFuture
 
 class ActionFeedbackSender(ORFS_Component):
     def __init__(self):
@@ -69,7 +69,7 @@ class ActionServer(ORFS_Component):
         action_feedback_sender.uuid=model.message_uuid
         action_feedback_sender.action_name=self.action_name
         
-        await self.coroutine_callback(model.message_content,action_info_sender)
+        await self.coroutine_callback(model.message_content,action_feedback_sender)
 
 
 class ActionClient(ORFS_Component):
