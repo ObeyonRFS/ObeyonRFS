@@ -148,7 +148,7 @@ class Node(ORFS_Component):
         s.parent=self
         self.service_clients.append(s)
         return s
-    def create_action_server(self,action_name:str,action_type:Type[ActionType],coroutine_callback:Callable[[ActionRequestType,ActionInfoSender],Coroutine[Any,Any,None]])->'ActionServer':
+    def create_action_server(self,action_name:str,action_type:Type[ActionType],coroutine_callback:Callable[[ActionRequestType,ActionFeedbackSender],Coroutine[Any,Any,ActionResultType]])->'ActionServer':
         s=ActionServer(action_name,action_type,coroutine_callback)
         s.parent=self
         self.action_servers.append(s)
