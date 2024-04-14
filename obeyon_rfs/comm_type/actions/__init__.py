@@ -22,17 +22,18 @@ class ActionType(BaseModel):
     def get_result_type(action_type:Type['ActionType'])->Type[ActionResultType]:
         return get_type_hints(action_type)["result"]
 
-class CountingActionRequestType(ActionRequestType):
-    count:int
-    counting_delay:float
+class MoveNumberToActionRequestType(ActionRequestType):
+    destination_number:float
+    error_threshold:float
 
-class CountingActionFeedbackType(ActionFeedbackType):
+class MoveNumberToActionFeedbackType(ActionFeedbackType):
     current_number:int
 
-class CountingActionResultType(ActionResultType):
+class MoveNumberToActionResultType(ActionResultType):
     final_number:int
+    error:float
 
-class CountingActionType(ActionType):
-    request:CountingActionRequestType
-    feedback:CountingActionFeedbackType
-    result:CountingActionResultType
+class MoveNumberActionType(ActionType):
+    request:MoveNumberToActionRequestType
+    feedback:MoveNumberToActionFeedbackType
+    result:MoveNumberToActionResultType

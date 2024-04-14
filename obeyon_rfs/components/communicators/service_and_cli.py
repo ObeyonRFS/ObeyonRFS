@@ -9,9 +9,13 @@ from obeyon_rfs.components import (
 from obeyon_rfs.comm_type.srvs import (
     ServiceType, ServiceRequestType, ServiceResponseType
 )
-from obeyon_rfs.components.communicators.future import FutureType, Future
 if TYPE_CHECKING:
-    from obeyon_rfs.components import ClientNode, LocalNetworkCoreNode
+    from obeyon_rfs.components import (
+        ClientNode,
+        LocalNetworkCoreNode,
+        Future,
+        ServiceFuture, 
+    )
 
 
 class ServiceServer(ORFS_Component):
@@ -46,7 +50,7 @@ class ServiceClient(ORFS_Component):
         self.srv_type = srv_type
         self.srv_request_type = ServiceType.get_request_type(srv_type)
         self.srv_response_type = ServiceType.get_response_type(srv_type)
-        self._futures:Dict[UUID,Future] = {}
+        self._futures:Dict[UUID,ServiceFuture] = {}
         
     async def recv_model(self,model:ORFS_Message):
         if model.message_name!=self.srv_name:
@@ -57,7 +61,7 @@ class ServiceClient(ORFS_Component):
                 f.response=srv_response
     async def future_with_model(self,model:ORFS_Message,response):
         pass
-    async def send_request(self,req:ServiceRequestType,timeout=5.0) -> Future:
+    async def send_request(self,req:ServiceRequestType,timeout=5.0) -> ServiceFuture:
         if not isinstance(req,self.srv_request_type):
             raise TypeError('message type is not matched')
         
@@ -69,10 +73,10 @@ class ServiceClient(ORFS_Component):
             node_receiver_host=self.parent.receiver_host,
             node_receiver_port=self.parent.receiver_port
         )
-        new_future=Future()
+        new_future=ServiceFuture()
         new_future.parent=self
-        new_future.future_type=FutureType.SERVICE
         new_future.response_timeout=timeout
+
         self._futures[model.message_uuid]=new_future
         await self.parent.sent_model_to_core(model)
 
