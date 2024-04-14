@@ -95,7 +95,7 @@ class ActionClient(ORFS_Component):
             for uuid,f in self._futures.items():
                 if uuid==model.message_uuid:
                     f._push_info(action_result)
-    async def send_request(self,req:ActionRequestType,feedback_timeout=5.0,result_timeout=float('inf')) -> ActionFuture:
+    async def send_request(self,req:ActionRequestType,feedback_timeout=5.0,result_timeout=float('inf')) -> 'ActionFuture':
         if not isinstance(req,self.action_request_type):
             raise TypeError('message type is not matched')
         
