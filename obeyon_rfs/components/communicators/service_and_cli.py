@@ -61,7 +61,7 @@ class ServiceClient(ORFS_Component):
                 f.response=srv_response
     async def future_with_model(self,model:ORFS_Message,response):
         pass
-    async def send_request(self,req:ServiceRequestType,timeout=5.0) -> ServiceFuture:
+    async def send_request(self,req:ServiceRequestType,timeout=5.0) -> 'ServiceFuture':
         if not isinstance(req,self.srv_request_type):
             raise TypeError('message type is not matched')
         
