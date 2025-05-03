@@ -12,6 +12,7 @@ import obeyon_rfs
 from obeyon_rfs.components.nodes import Node
 
 class LocalNetworkCorePingerNode(Node):
+    #Might change this to not be a Node, because User will have "two" nodes in their system
     """
         The node that pings the core node in the local network by broadcasting
     """
