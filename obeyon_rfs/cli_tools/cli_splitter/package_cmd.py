@@ -71,6 +71,9 @@ def install_package(pkg_input_path:str,cwd_path:str,cli_tools_path:str):
     pkg_path=os.path.abspath(pkg_input_path)
     pkg_name=os.path.basename(pkg_path)
 
+    print(pkg_path)
+    print(pkg_name)
+
     
 
 
@@ -95,18 +98,29 @@ def install_package(pkg_input_path:str,cwd_path:str,cli_tools_path:str):
     # replace package_base_name with pkg_name in pyproject.toml
     with open(pkg_pyproject_toml_path,"r") as f:
         content=f.read()
-    content=content.replace("package_base_name",pkg_name)
-    content=content.replace("package_command_name",orfs_package_yaml["package_command_name"])
+
+    replace_dict={
+        "PACKAGE_NAME":pkg_name,
+        "PACKAGE_COMMAND_NAME":orfs_package_yaml["package_command_name"],
+        "DESCRIPTION":repr(orfs_package_yaml["description"]),
+        "VERSION":repr(orfs_package_yaml["version"]),
+        "AUTHORS":str(orfs_package_yaml["authors"]),
+        "MAINTAINERS":str(orfs_package_yaml["maintainers"]),
+        "DEPENDENCIES":"\n".join(orfs_package_yaml["dependencies"]),
+    }
+    for key in replace_dict:
+        content=content.replace(key,replace_dict[key])
+
+
     with open(pkg_pyproject_toml_path,"w") as f:
         f.write(content)
-
 
     # pip install the package
     os.chdir(pkg_path)
     if os.system(f"pip install -e .")!=0:
         print("Failed to install package",file=sys.stderr,flush=True)
         os.chdir(cwd_path)
-        os.remove(pkg_pyproject_toml_path)
+        # os.remove(pkg_pyproject_toml_path)
         sys.exit(1)
     os.chdir(cwd_path)
 

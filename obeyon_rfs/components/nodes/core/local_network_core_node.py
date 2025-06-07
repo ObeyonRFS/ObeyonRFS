@@ -10,7 +10,11 @@ import obeyon_rfs
 
 class LocalNetworkCoreNode(Node):
     """
-        Core node for local network communication
+        Core Node = "Centralized Node"
+        Core node for local network communication (in WiFi or LAN)\n
+        This node is used as a bridge to between all the Application Nodes\n
+        - node_name: str\n
+
     """
     def __init__(self,node_name:str,use_port:int=7134,domain_name:str=""):
         super().__init__(

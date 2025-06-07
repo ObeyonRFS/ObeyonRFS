@@ -15,7 +15,24 @@ from obeyon_rfs.comm_type.actions import (
  
 from obeyon_rfs.components.communicators import *
 
+import numpy
+numpy.set_printoptions(threshold=numpy.inf)
+
 class Node(ORFS_Component):
+    """
+        Base Node class for all nodes\n
+        This class is used to create a node for the system\n
+        Node = "Application" or "Sequence of instructions to run on the system"\n
+        - node_name : str
+            name of the node, used to identify the node in the system
+        - receiver_host : str
+            host name to receive ORFS_Message (default: obeyon_rfs.get_local_ip_address())
+        - receiver_port : int
+            port number to receive ORFS_Message
+        - domain_name (str, optional)
+            name of the domain, used to separate nodes in the same network (can make CoreNode to do some filtering)\n
+        
+    """
     def __init__(self,node_name:str,receiver_host:str,receiver_port:int,domain_name=""):
         super().__init__()
         self.domain_name=domain_name

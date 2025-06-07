@@ -1,84 +1,46 @@
+# using poetry pyproject format : https://python-poetry.org/docs/pyproject/
+# poetry new .
+
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
-name = "package_base_name"
-version = "0.0.0"
-# dynamic = ["version"]
-dependencies = [
-  "ObeyonRFS",
-]
-requires-python = ">=3.10"
-authors=[]
-maintainers=[]
+[tool.poetry]
+package-mode = true
+name = "PACKAGE_NAME"
+version = VERSION
+description = DESCRIPTION
+license = "MIT"
+authors = AUTHORS
+maintainers = MAINTAINERS
 readme = "README.md"
-license = {text = "MIT License"}
-
-[project.optional-dependencies]
-dev = [
-  "pytest",
-  "pytest-cov",
-  "pytest-mock",
-  "pytest"
+homepage = "https://github.com/pypa/sampleproject"
+repository = "https://github.com/ObeyonRFS/ObeyonRFS"
+documentation = "https://github.com/pypa/sampleproject"
+keywords = ["packaging","poetry"]
+classifiers = [
+  #https://pypi.org/classifiers/
+  "Programming Language :: Python :: 3",
+  "Framework :: Robot Framework",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
 ]
-
-[project.scripts]
-package_command_name = "package_base_name:main"
-
-
-
-
-
-
-
-# # using poetry pyproject format : https://python-poetry.org/docs/pyproject/
-# # poetry new .
-
-# [build-system]
-# requires = ["poetry-core"]
-# build-backend = "poetry.core.masonry.api"
-
-# [tool.poetry]
-# package-mode = true
-# name = "package_base_name"
-# version = "0.0.0"
-# description = "ObeyonRFS package"
-# license = "MIT"
-# authors = []
-# maintainers = []
-# readme = "README.md"
-# homepage = "https://github.com/pypa/sampleproject"
-# repository = "https://github.com/pypa/sampleproject"
-# documentation = "https://github.com/pypa/sampleproject"
-# keywords = ["packaging","poetry"]
-# classifiers = [
-#   #https://pypi.org/classifiers/
-#   "Programming Language :: Python :: 3",
-#   "Framework :: Robot Framework",
-#   "License :: OSI Approved :: MIT License",
-#   "Operating System :: OS Independent",
-# ]
-# packages = [
-#   { include = "src" },
-# ]
-# include = [
-#   "src/**/*",
-#   "src/**/*.py",
-#   "src/**/LICENSE",
-#   "src/**/.gitignore",
-#   "src/**/*.txt",
-#   "src/**/*.yaml",
-# ]
-# exclude = ["__pycache__", ".pytest_cache", ".git"]
+packages = [
+  { include = "src" },
+]
+include = [
+  "src/**/*",
+  "src/**/*.py",
+  "src/**/LICENSE",
+  "src/**/.gitignore",
+  "src/**/*.txt",
+  "src/**/*.yaml",
+]
+exclude = ["__pycache__", ".pytest_cache", ".git"]
 
 
-# [tool.poetry.dependencies]
-# python = "^3.9"
-# pyserial = "^3.5"
-# pydantic = "^1.8.2"
-# dnspython = "^2.1.0"
-# aioping = "^0.2.0"
+[tool.poetry.dependencies]
+DEPENDENCIES
 
-# [tool.poetry.scripts]
-# package_command_name = "src:main"
+[tool.poetry.scripts]
+PACKAGE_COMMAND_NAME = "PACKAGE_NAME:main"

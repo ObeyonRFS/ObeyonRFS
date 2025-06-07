@@ -34,7 +34,7 @@ from obeyon_rfs.cli_tools.cli_splitter import workspace_cmd,package_cmd,node_cmd
 
 
 def main():
-    parser = argparse.ArgumentParser(description="ORFS Command Line Interface")
+    parser = argparse.ArgumentParser(description="ObeyonRFS' Command Line Interface")
 
     cmd_category = parser.add_subparsers(title="Workspace Commands", dest="cmd_category")
 
