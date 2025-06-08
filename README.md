@@ -1,17 +1,27 @@
 # ObeyonRFS
 
-[developer Todo list](https://docs.google.com/document/d/1j6fuaYsBLOWE2tTJCBUQifE4MAYX0mjktdoHNTuosc4/edit)
+ObeyonRFS is a customized robotic framework, The framework for creating mechanical robot.
 
-ObeyonRFS is a customized robotic framework.
+This framework aims to work across any device that have access to Python. (Micropython is an exception)
 
-This framework aims to work across OS and microcontroller device by utilizing wxPython, TCP socket, VTK, strict Component-Based Architecture, MicroPython, Device Roles (the device is using micropython or cpython) etc.,
+The core feature of this frameworks are
+- A communication between programs with Publisher/Subscriber, Service, Action by utilizing TCP protocol
+- GUI rendering with wxPython and VTK for compatibility between OS
+- strict Component-Base architecture
+- Device Roles
 
-# Installation from source
+# Installation
 
+## Install module as standard install
 ```
 git clone https://github.com/ObeyonRFS/ObeyonRFS
 cd ObeyonRFS
 python install_source.py
 ```
 
-The script `install_edit.py` is for installing this repo in edit mode. You can use it too.
+## Install as edit mode (recommended)
+```
+git clone https://github.com/ObeyonRFS/ObeyonRFS
+cd ObeyonRFS
+python install_edit.py
+```
