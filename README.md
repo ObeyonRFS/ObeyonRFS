@@ -1,6 +1,6 @@
 # ObeyonRFS
 
-ObeyonRFS is a customized robotic framework, The framework for creating mechanical robot.
+ObeyonRFS is a customized robotic framework, The framework for creating physical robot.
 
 This framework aims to work across any device that have access to Python. (Micropython is an exception)
 

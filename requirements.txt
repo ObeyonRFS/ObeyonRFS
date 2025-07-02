@@ -1,6 +1,6 @@
+#This requirements.txt is for installing the essential to build the module
 build
 # twine
 poetry
 # mpremote
 toml
-pydantic
